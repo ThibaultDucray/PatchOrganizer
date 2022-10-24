@@ -7,25 +7,22 @@
 
 import Foundation
 
-var dummypatches: [UIPatch] = []
-//    UIPatch(id: 0, bank:1, num:1, name: "Select file"),
-//]
 
 
 class PatchHandler {
     var patchList: PatchList
     var validFile: Bool
     var plp: UnsafeMutablePointer<PatchList>
-    var initFilename: String
+    var actualFilename: String
     var newFilename: String
     
     init(fileName: String) {
-        self.initFilename = fileName
+        self.actualFilename = fileName
         self.newFilename = fileName
         plp = UnsafeMutablePointer<PatchList>.allocate(capacity: 1)
         //var cs = fileName.cString(using: String.Encoding.utf8)
-        let cs = UnsafeMutablePointer<CChar>(mutating: fileName.cString(using: String.Encoding.utf8))
-        let err = readPresetsFromFile(cs, plp)
+        //let cs = UnsafeMutablePointer<CChar>(mutating: fileName.cString(using: String.Encoding.utf8))
+        let err = readPresetsFromFile(actualFilename, plp)
         validFile = err == NBPATCHES
         patchList = plp.pointee
     }
@@ -49,9 +46,10 @@ class PatchHandler {
     
     func writePatchlist(fileName: String) -> Int {
         self.newFilename = fileName
-        let ocs = UnsafeMutablePointer<CChar>(mutating: self.initFilename.cString(using: String.Encoding.utf8))
-        let ncs = UnsafeMutablePointer<CChar>(mutating: fileName.cString(using: String.Encoding.utf8))
-        let ret = writePresetsToFile(ncs, ocs, plp)
+        //let acs = UnsafeMutablePointer<CChar>(mutating: actualFilename.cString(using: String.Encoding.utf8))
+        //let ncs = UnsafeMutablePointer<CChar>(mutating: newFilename.cString(using: String.Encoding.utf8))
+        //let ret = writePresetsToFile(acs, ncs, plp)
+        let ret = writePresetsToFile(newFilename, actualFilename, plp)
         return ret
     }
     

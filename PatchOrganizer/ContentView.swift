@@ -26,47 +26,56 @@ class UIPatch: Identifiable, ObservableObject {
 }
 
 class UIPatches: ObservableObject {
-    @Published var patches = dummypatches
-    @Published var fileName = "<nofilename>"
+    @Published var patches: [UIPatch] = []
+    @Published var actualFileName = "<nofilename>"
     var newFileName = "<nofilename>"
     @Published var openError = false
     @Published var saveError = false
-
+    var errcode = 0
+    var patchHandler: PatchHandler?
+    
     func readFromFile(fileName: String) {
-        self.fileName = fileName
+        self.actualFileName = fileName
         openError = false
-        let patchHandler = PatchHandler(fileName: fileName)
-        if (patchHandler.validFile) {
-            // todo? make this func async
-            patches = []
-            for i in (0 ... NBPATCHES - 1) {
-                let p = UIPatch(id: Int(i), elem: patchHandler.getElem(i: Int(i)))
-                patches.append(p)
+        patchHandler = PatchHandler(fileName: fileName)
+        if let vf = patchHandler?.validFile {
+            if (vf) {
+                // todo? make this func async
+                patches = []
+                for i in (0 ... NBPATCHES - 1) {
+                    if let elem = patchHandler?.getElem(i: Int(i)) {
+                        let p = UIPatch(id: Int(i), elem: elem)
+                        patches.append(p)
+                    }
+                }
+                patches.sort(by: {(a:UIPatch, b:UIPatch) -> Bool in return (a.bank * 3 + a.num) < (b.bank * 3 + b.num) })
+            } else {
+                openError = true
             }
-            patches.sort(by: {(a:UIPatch, b:UIPatch) -> Bool in return (a.bank * 3 + a.num) < (b.bank * 3 + b.num) })
         } else {
             openError = true
         }
     }
     
     func reReadFromFile() {
-        readFromFile(fileName: fileName)
+        readFromFile(fileName: actualFileName)
     }
     
     func writeToFile(fileName: String) {
         saveError = false
         self.newFileName = fileName
-        let patchHandler = PatchHandler(fileName: self.fileName)
-        
+
         for i in (0 ... NBPATCHES - 1) {
             let id = patches[Int(i)].id
             let bank = patches[Int(i)].bank
             let num = patches[Int(i)].num
             let name = patches[Int(i)].name
-            patchHandler.setElem(actualpos: id, bank: bank, num: num, name: name, newpos: Int(i))
+            patchHandler?.setElem(actualpos: id, bank: bank, num: num, name: name, newpos: Int(i))
         }
-        let err = patchHandler.writePatchlist(fileName: self.newFileName)
-        saveError = (err <= 0)
+        if let err = patchHandler?.writePatchlist(fileName: self.newFileName) {
+            self.errcode = err
+            saveError = (err <= 0)
+        }
     }
 }
 
@@ -87,10 +96,10 @@ struct ContentView: View {
                 .onMove (perform: move)
             }
         }
-        .alert("Could not export to \(uiPatches.newFileName)", isPresented: $uiPatches.saveError, actions: {
+        .alert("Could not export to \(uiPatches.newFileName)\nError code \(uiPatches.errcode)", isPresented: $uiPatches.saveError, actions: {
             Button("OK", role: .cancel, action: {})
             })
-        .alert("Could not open \(uiPatches.fileName)", isPresented: $uiPatches.openError, actions: {
+        .alert("Could not open \(uiPatches.actualFileName)", isPresented: $uiPatches.openError, actions: {
             Button("OK", role: .cancel, action: {})
             })
         .navigationTitle("Ampero Patch Organizer")
@@ -113,7 +122,7 @@ struct ContentView: View {
         }
         .buttonStyle(.bordered)
         
-        Text("File: \(uiPatches.fileName)")
+        Text("File: \(uiPatches.actualFileName)")
     }
     
     func move(from source: IndexSet, to destination: Int) {

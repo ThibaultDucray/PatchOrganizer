@@ -1,6 +1,6 @@
 #include "patchorg.h"
 
-size_t readfile(u_int8_t* fileContent, char* filename) {
+size_t readfile(u_int8_t* fileContent, const char* filename) {
     FILE* f;
     size_t fs, frs;
 
@@ -24,7 +24,7 @@ size_t presetsFileSize(PresetFile *presets) {
     return presets->header->size + sizeof presets->header->tsrp + sizeof presets->header->size;
 }
 
-size_t writefile(u_int8_t* fileContent, char* filename, size_t filesize) {
+size_t writefile(u_int8_t* fileContent, const char* filename, size_t filesize) {
     FILE *f;
     size_t i;
     f = fopen(filename, "wb");
@@ -103,7 +103,7 @@ void orderPatches(PresetFile* presets, u_int8_t neworder[NBPATCHES]) {
     }
 }
 
-size_t fileSize(char *filename) {
+size_t fileSize(const char *filename) {
     FILE *f;
     size_t s;
 
@@ -119,7 +119,7 @@ size_t fileSize(char *filename) {
 }
 
 // utilities for external (eg. Swift) global encapsulation
-int readPresetsFromFile(char *filename, PatchList *patchlist) {
+int readPresetsFromFile(const char *filename, PatchList *patchlist) {
     Filedesc fd;
     PresetFile presets;
     int err, i;
@@ -171,7 +171,7 @@ void setPatchNumForIndex(PatchList *patchlist, int i, u_int8_t num) {
 }
 
 // utilities for external (eg. Swift) global encapsulation
-size_t writePresetsToFile(char *newfilename, char *oldfilename, PatchList *patchlist) {
+long int writePresetsToFile(const char *newfilename, const char *oldfilename, PatchList *patchlist) {
     Filedesc fdold;
     Filedesc fdnew;
     PresetFile presets;
@@ -185,18 +185,18 @@ size_t writePresetsToFile(char *newfilename, char *oldfilename, PatchList *patch
     }
     fdold.content = malloc(fdold.size);
     if (fdold.content == NULL) {
-        return 0;
+        return -2;
     }
     oldfilesize = readfile(fdold.content, oldfilename);
     if (oldfilesize != fdold.size) {
         free(fdold.content);
-        return -1;
+        return -3;
     }
 
     err = createPatchList(&presets, fdold.content, fdold.size);
     if (err != NBPATCHES) {
         free(fdold.content);
-        return 0;
+        return -4;
     }
 
     for (i = 0; i < NBPATCHES; i++) {
@@ -210,21 +210,21 @@ size_t writePresetsToFile(char *newfilename, char *oldfilename, PatchList *patch
     fdnew.content = malloc(fdnew.size);
     if (fdnew.content == NULL) {
         free(fdold.content);
-        return 0;
+        return -5;
     }
 
     newfilesize = createPresetfileContent(fdnew.content, fdnew.size, &presets);
     if (newfilesize != fdnew.size) {
         free(fdold.content);
         free(fdnew.content);
-        return 0;
+        return -6;
     }
 
     newfilesize = writefile(fdnew.content, newfilename, fdnew.size);
     if (newfilesize != fdnew.size) {
         free(fdold.content);
         free(fdnew.content);
-        return -1;
+        return -7;
     }
 
     free(fdold.content);
