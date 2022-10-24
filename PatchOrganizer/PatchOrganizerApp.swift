@@ -11,6 +11,7 @@ import SwiftUI
 struct PatchOrganizerApp: App {
     var body: some Scene {
         WindowGroup {
+            // main view
             ContentView()
         }
     }

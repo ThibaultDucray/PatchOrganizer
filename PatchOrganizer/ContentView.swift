@@ -23,13 +23,6 @@ class UIPatch: Identifiable, ObservableObject {
         self.name = elem.name
         self.id = id //elem.bank * 3 + elem.num
     }
-    
-//    init(id: Int, bank: Int, num: Int, name: String) {
-//        self.id = id
-//        self.bank = bank
-//        self.num = num
-//        self.name = name
-//    }
 }
 
 class UIPatches: ObservableObject {

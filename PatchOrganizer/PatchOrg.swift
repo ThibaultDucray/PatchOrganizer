@@ -43,7 +43,6 @@ class PatchHandler {
     }
     
     func setElem(actualpos: Int, bank: Int, num: Int, name: String, newpos: Int) {
-        //let actualpos = (bank - 1) * 3 + num - 1
         setPatchNumForIndex(plp, Int32(actualpos), UInt8(newpos))
         // set name one day ?
     }
