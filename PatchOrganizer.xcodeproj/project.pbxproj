@@ -105,11 +105,11 @@
 				102C60D128FFD3E90088D627 /* patchorg.h */,
 				1031520C28FDA7910066B958 /* PatchOrganizerApp.swift */,
 				1031520E28FDA7910066B958 /* ContentView.swift */,
+				102C60D428FFD4400088D627 /* PatchOrg.swift */,
 				1031521028FDA7930066B958 /* Assets.xcassets */,
 				1031521528FDA7930066B958 /* PatchOrganizer.entitlements */,
-				1031521228FDA7930066B958 /* Preview Content */,
 				102C60D028FFD3E90088D627 /* PatchOrganizer-Bridging-Header.h */,
-				102C60D428FFD4400088D627 /* PatchOrg.swift */,
+				1031521228FDA7930066B958 /* Preview Content */,
 			);
 			path = PatchOrganizer;
 			sourceTree = "<group>";
