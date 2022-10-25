@@ -51,6 +51,7 @@
 		1031522428FDA7930066B958 /* PatchOrganizerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatchOrganizerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1031522828FDA7930066B958 /* PatchOrganizerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchOrganizerUITests.swift; sourceTree = "<group>"; };
 		1031522A28FDA7930066B958 /* PatchOrganizerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchOrganizerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		105F18B62907FFEE00C32702 /* license.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +106,7 @@
 				102C60D128FFD3E90088D627 /* patchorg.h */,
 				1031520C28FDA7910066B958 /* PatchOrganizerApp.swift */,
 				1031520E28FDA7910066B958 /* ContentView.swift */,
+				105F18B62907FFEE00C32702 /* license.txt */,
 				102C60D428FFD4400088D627 /* PatchOrg.swift */,
 				1031521028FDA7930066B958 /* Assets.xcassets */,
 				1031521528FDA7930066B958 /* PatchOrganizer.entitlements */,

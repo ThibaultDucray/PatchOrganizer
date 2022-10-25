@@ -7,15 +7,47 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "CC28DF9E-92DC-401E-BFE4-DEF36D0C8412"
+            uuid = "F1C193E7-B762-42A3-88B1-E0116E416A8D"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PatchOrganizer/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "move(from:to:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "24C2C8DB-F531-4E2B-943C-F095E452E0B5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PatchOrganizer/ContentView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "move(from:to:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A5A103B5-DB96-4EEB-846F-40E0FCDDA88A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PatchOrganizer/ContentView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
             landmarkName = "writeToFile(fileName:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -23,47 +55,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "6C5ADFE2-2994-4152-97EA-30990D57C55A"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PatchOrganizer/ContentView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "64"
-            endingLineNumber = "64"
-            landmarkName = "writeToFile(fileName:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B0F94832-E0AE-4F61-93EC-6B36EED18E7A"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PatchOrganizer/PatchOrg.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "writePatchlist(fileName:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "EBA84253-74D6-45E0-8892-4C7E1C3CC7B0"
+            uuid = "AE0BDA2E-A218-4E84-96F0-DF8B1A4530A4"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PatchOrganizer/patchorg.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "223"
-            endingLineNumber = "223"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
             landmarkName = "writePresetsToFile(newfilename, oldfilename, patchlist)"
             landmarkType = "9">
          </BreakpointContent>
@@ -71,80 +71,80 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "6199A31B-833A-4FC8-8229-5C26C3B01837"
+            uuid = "706C4610-78D3-48C1-A7F1-EA47C6741BE4"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PatchOrganizer/patchorg.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "writefile(fileContent, filename, filesize)"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "writePresetsToFile(newfilename, oldfilename, patchlist)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "96DD1051-72F2-46A6-803D-D566F644BBA4"
+            uuid = "85855A39-2019-4444-B984-9F8815F4F2A2"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PatchOrganizer/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "readFromFile(fileName:)"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
+            landmarkName = "writeToFile(fileName:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "96DD1051-72F2-46A6-803D-D566F644BBA4 - 9efc9f3f6b9191ac"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PatchOrganizer.UIPatches.readFromFile(fileName: Swift.String) -&gt; ()"
-                  moduleName = "PatchOrganizer"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/thibaultducray/Documents/src/swift/PatchOrganizer/PatchOrganizer/ContentView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "49"
-                  endingLineNumber = "49"
-                  offsetFromSymbolStart = "652">
-               </Location>
-               <Location
-                  uuid = "96DD1051-72F2-46A6-803D-D566F644BBA4 - 315f145934c9780f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (PatchOrganizer.UIPatch, PatchOrganizer.UIPatch) -&gt; Swift.Bool in PatchOrganizer.UIPatches.readFromFile(fileName: Swift.String) -&gt; ()"
-                  moduleName = "PatchOrganizer"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/thibaultducray/Documents/src/swift/PatchOrganizer/PatchOrganizer/ContentView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "49"
-                  endingLineNumber = "49"
-                  offsetFromSymbolStart = "36">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B252F739-6313-421A-89C5-7EA004593AB0"
-            shouldBeEnabled = "Yes"
+            uuid = "3A820866-F3A2-4BCC-9407-271314EEB4A0"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "PatchOrganizer/ContentView.swift"
+            filePath = "PatchOrganizer/patchorg.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
-            landmarkName = "writeToFile(fileName:)"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
+            landmarkName = "writePresetsToFile(newfilename, oldfilename, patchlist)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F8F41113-C7CC-44A0-9A23-98EF96E973AE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PatchOrganizer/PatchOrg.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
+            landmarkName = "writePatchlist(fileName:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D8ECE804-51C7-4BA3-BDF5-DE4D723D6685"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PatchOrganizer/PatchOrg.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "writePatchlist(fileName:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
