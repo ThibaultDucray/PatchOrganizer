@@ -8,11 +8,11 @@ This is PatchOrganizer, a small tool that will help you organize your Ampero(c) 
 The source code:
 
 All Swift code was created to handle the C code that manipulates the PRST files.
-You need XCode on your MacOS to develop and compile the app.
+<br/>You need XCode on your MacOS to develop and compile the app.
 
 Two C files are needed:
 patchorg.h -> header file
-patchorg.c -> tools to manipulate the PRST files
+<br/>patchorg.c -> tools to manipulate the PRST files
 
 # License
 
