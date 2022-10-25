@@ -63,4 +63,4 @@ The file format was partially decoded:
 # Is it free?
 
 Yes, under the GPL - GNU GENERAL PUBLIC LICENSE.
-
+See https://www.gnu.org/licenses/gpl.txt
