@@ -59,3 +59,8 @@ The file format was partially decoded:
 48653	01	          1	? Separator ?
 48653	06 0A*	          2	? Value may differ.
 </pre>
+
+# Is it free?
+
+Yes, under the GPL - GNU GENERAL PUBLIC LICENSE.
+
