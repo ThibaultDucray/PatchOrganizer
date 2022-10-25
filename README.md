@@ -23,7 +23,7 @@ But today, it works.
 
 # The file format
 
-The file format was partially decoded:
+The file format was partially decoded, see below. Offsets and value may differ, read description carefully to understand how to manipulate the PRST files.
 
 <pre>
 <b>Offset	Content 	Size	Description</b>
