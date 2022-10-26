@@ -140,7 +140,8 @@ struct ContentView: View {
         
         Text("File: \(uiPatches.actualFileName)")
     }
-    
+
+        
     func move(from source: IndexSet, to destination: Int) {
         var s = ""
         source.forEach { elem in

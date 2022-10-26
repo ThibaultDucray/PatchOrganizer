@@ -1,10 +1,9 @@
 //
-//  PatchOrganizerApp.swift
+//  PatchOrganizerMenu.swift
 //  PatchOrganizer
 //
-//  Created by Thibault DUCRAY on 17/10/2022.
+//  Created by Thibault DUCRAY on 25/10/2022.
 //
-
 // This file is part of PatchOrganizer.
 //
 // PatchOrganizer is free software: you can redistribute it and/or modify it under the
@@ -23,17 +22,30 @@
 
 import SwiftUI
 
-@main
-struct PatchOrganizerApp: App {
-    var cv = ContentView()
+struct Menus: Commands {
+    var cv: ContentView
     
-    var body: some Scene {
-        WindowGroup {
-            // main view
-            cv
+    init(cv: ContentView) {
+        self.cv = cv
+    }
+    
+    var body: some Commands {
+        //EmptyCommands()
+
+        CommandGroup(before: .newItem) {
+            Button("Reload") {
+                cv.actionReload()
+            }.keyboardShortcut("O", modifiers: .command)
         }
-        .commands {
-            Menus(cv: cv)
+        CommandGroup(before: .newItem) {
+            Button("Open...") {
+                cv.actionOpen()
+            }.keyboardShortcut("R", modifiers: .command)
+        }
+        CommandGroup(before: .importExport) {
+            Button("Export...") {
+                cv.actionExport()
+            }.keyboardShortcut("E", modifiers: .command)
         }
     }
 }

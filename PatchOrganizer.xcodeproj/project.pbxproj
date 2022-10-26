@@ -16,6 +16,8 @@
 		1031521F28FDA7930066B958 /* PatchOrganizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031521E28FDA7930066B958 /* PatchOrganizerTests.swift */; };
 		1031522928FDA7930066B958 /* PatchOrganizerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031522828FDA7930066B958 /* PatchOrganizerUITests.swift */; };
 		1031522B28FDA7930066B958 /* PatchOrganizerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031522A28FDA7930066B958 /* PatchOrganizerUITestsLaunchTests.swift */; };
+		105F18B82908302000C32702 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 105F18B72908301F00C32702 /* Credits.rtf */; };
+		105F18BA290832FD00C32702 /* PatchOrganizerMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105F18B9290832FD00C32702 /* PatchOrganizerMenu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +54,8 @@
 		1031522828FDA7930066B958 /* PatchOrganizerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchOrganizerUITests.swift; sourceTree = "<group>"; };
 		1031522A28FDA7930066B958 /* PatchOrganizerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchOrganizerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		105F18B62907FFEE00C32702 /* license.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
+		105F18B72908301F00C32702 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		105F18B9290832FD00C32702 /* PatchOrganizerMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchOrganizerMenu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +109,8 @@
 				102C60D228FFD3E90088D627 /* patchorg.c */,
 				102C60D128FFD3E90088D627 /* patchorg.h */,
 				1031520C28FDA7910066B958 /* PatchOrganizerApp.swift */,
+				105F18B9290832FD00C32702 /* PatchOrganizerMenu.swift */,
+				105F18B72908301F00C32702 /* Credits.rtf */,
 				1031520E28FDA7910066B958 /* ContentView.swift */,
 				105F18B62907FFEE00C32702 /* license.txt */,
 				102C60D428FFD4400088D627 /* PatchOrg.swift */,
@@ -247,6 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1031521428FDA7930066B958 /* Preview Assets.xcassets in Resources */,
+				105F18B82908302000C32702 /* Credits.rtf in Resources */,
 				1031521128FDA7930066B958 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,6 +283,7 @@
 				102C60D528FFD4400088D627 /* PatchOrg.swift in Sources */,
 				1031520F28FDA7910066B958 /* ContentView.swift in Sources */,
 				1031520D28FDA7910066B958 /* PatchOrganizerApp.swift in Sources */,
+				105F18BA290832FD00C32702 /* PatchOrganizerMenu.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
