@@ -11,8 +11,19 @@ All Swift code was created to handle the C code that manipulates the PRST files.
 <br/>You need XCode on your MacOS to develop and compile the app.
 
 Two C files are needed:
-patchorg.h -> header file
+<br/>patchorg.h -> header file
 <br/>patchorg.c -> tools to manipulate the PRST files
+
+# I just want to use the software!
+
+Don't care about the source code?
+1. Go to the [Release](https://github.com/ThibaultDucray/PatchOrganizer/releases/) section
+2. Download the application zip file
+3. From the Finder, unzip (uncompress) it
+4. Right clic on the application file
+5. Chose "Open" and ignore the warnings if any
+
+Also... read the [Wiki](https://github.com/ThibaultDucray/PatchOrganizer/wiki) section: **you use this software at your own risk**.
 
 # License
 
