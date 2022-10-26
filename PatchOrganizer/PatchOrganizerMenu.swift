@@ -35,17 +35,17 @@ struct Menus: Commands {
         CommandGroup(before: .newItem) {
             Button("Reload") {
                 cv.actionReload()
-            }.keyboardShortcut("O", modifiers: .command)
+            }.keyboardShortcut("R", modifiers: .command)
         }
         CommandGroup(before: .newItem) {
             Button("Open...") {
                 cv.actionOpen()
-            }.keyboardShortcut("R", modifiers: .command)
+            }.keyboardShortcut("O", modifiers: .command)
         }
-        CommandGroup(before: .importExport) {
-            Button("Export...") {
-                cv.actionExport()
-            }.keyboardShortcut("E", modifiers: .command)
+        CommandGroup(before: .saveItem) {
+            Button("Save as...") {
+                cv.actionSaveAs()
+            }.keyboardShortcut("S", modifiers: .command)
         }
     }
 }

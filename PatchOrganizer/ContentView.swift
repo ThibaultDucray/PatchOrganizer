@@ -43,9 +43,10 @@ class UIPatch: Identifiable, ObservableObject {
 
 class UIPatches: ObservableObject {
     @Published var patches: [UIPatch] = []
-    @Published var actualFileName = "<nofilename>"
-    var newFileName = "<nofilename>"
+    @Published var actualFileName : String?
+    var newFileName : String?
     @Published var openError = false
+    @Published var emptyError = false
     @Published var saveError = false
     var errcode = 0
     var patchHandler: PatchHandler?
@@ -74,12 +75,14 @@ class UIPatches: ObservableObject {
     }
     
     func reReadFromFile() {
-        readFromFile(fileName: actualFileName)
+        if let fn = self.actualFileName {
+            readFromFile(fileName: fn)
+        }
     }
     
-    func writeToFile(fileName: String) {
+    func writeToFile(newFileName: String) {
         saveError = false
-        self.newFileName = fileName
+        self.newFileName = newFileName
 
         for i in (0 ... NBPATCHES - 1) {
             let id = patches[Int(i)].id
@@ -88,7 +91,7 @@ class UIPatches: ObservableObject {
             let name = patches[Int(i)].name
             patchHandler?.setElem(actualpos: id, bank: bank, num: num, name: name, newpos: Int(i))
         }
-        if let err = patchHandler?.writePatchlist(fileName: self.newFileName) {
+        if let err = patchHandler?.writePatchlist(fileName: newFileName) {
             self.errcode = err
             saveError = (err <= 0)
         }
@@ -112,10 +115,13 @@ struct ContentView: View {
                 .onMove (perform: move)
             }
         }
-        .alert("Could not export to \(uiPatches.newFileName)\nError code \(uiPatches.errcode)", isPresented: $uiPatches.saveError, actions: {
+        .alert("Please open a valid preset file.", isPresented: $uiPatches.emptyError, actions: {
             Button("OK", role: .cancel, action: {})
             })
-        .alert("Could not open \(uiPatches.actualFileName)", isPresented: $uiPatches.openError, actions: {
+        .alert("Could not save as \(uiPatches.newFileName ?? "none")\nError code \(uiPatches.errcode)", isPresented: $uiPatches.saveError, actions: {
+            Button("OK", role: .cancel, action: {})
+            })
+        .alert("Could not open \(uiPatches.actualFileName ?? "none")", isPresented: $uiPatches.openError, actions: {
             Button("OK", role: .cancel, action: {})
             })
         .navigationTitle("Ampero Patch Organizer")
@@ -132,13 +138,13 @@ struct ContentView: View {
             Button(action: actionOpen) {
                 Label("Open...", systemImage: "doc")
             }
-            Button(action: actionExport) {
-                Label("Export...", systemImage: "arrow.down.doc")
+            Button(action: actionSaveAs) {
+                Label("Save as...", systemImage: "arrow.down.doc")
             }
         }
         .buttonStyle(.bordered)
         
-        Text("File: \(uiPatches.actualFileName)")
+        Text("File: \(uiPatches.actualFileName ?? "none")")
     }
 
         
@@ -159,17 +165,25 @@ struct ContentView: View {
             uiPatches.readFromFile(fileName: panel.url?.path ?? "<none>")
         }
     }
-    func actionExport() {
+    func actionSaveAs() {
+        if uiPatches.actualFileName == nil {
+            uiPatches.emptyError = true
+            return
+        }
         let panel = NSSavePanel() //NSOpenPanel()
-        panel.title = "Export patches list"
+        panel.title = "Save patches list"
         //panel.allowsMultipleSelection = false
         //panel.canChooseDirectories = false
         if panel.runModal() == .OK {
-            uiPatches.writeToFile(fileName: panel.url?.path ?? "<none>")
+            uiPatches.writeToFile(newFileName: panel.url?.path ?? "<none>")
         }
     }
     
     func actionReload() {
+        if uiPatches.actualFileName == nil {
+            uiPatches.emptyError = true
+            return
+        }
         uiPatches.reReadFromFile()
     }
 }
