@@ -24,23 +24,30 @@ import SwiftUI
 
 struct Menus: Commands {
     var cv: ContentView
+    @ObservedObject var uiPatches: UIPatches
     
     init(cv: ContentView) {
         self.cv = cv
+        uiPatches = cv.uiPatches
     }
-    
-    var body: some Commands {
-        //EmptyCommands()
 
-        CommandGroup(before: .newItem) {
-            Button("Reload") {
-                cv.actionReload()
-            }.keyboardShortcut("R", modifiers: .command)
-        }
+    var body: some Commands {
+        EmptyCommands()
+
         CommandGroup(before: .newItem) {
             Button("Open...") {
                 cv.actionOpen()
             }.keyboardShortcut("O", modifiers: .command)
+            
+            Button("Reload") {
+                cv.actionReload()
+            }.keyboardShortcut("R", modifiers: .command)
+        }
+        CommandGroup(before: .textEditing) {
+            Picker("Tail bit", selection: $uiPatches.invertTailBit) {
+                Text("Normal tail bit").tag(false)
+                Text("Inverted tail bit").tag(true)
+            }
         }
         CommandGroup(before: .saveItem) {
             Button("Save as...") {

@@ -59,12 +59,12 @@ class PatchHandler {
         // set name one day ?
     }
     
-    func writePatchlist(fileName: String) -> Int {
+    func writePatchlist(fileName: String, invertTailBit: Bool) -> Int {
         self.newFilename = fileName
         //let acs = UnsafeMutablePointer<CChar>(mutating: actualFilename.cString(using: String.Encoding.utf8))
         //let ncs = UnsafeMutablePointer<CChar>(mutating: newFilename.cString(using: String.Encoding.utf8))
         //let ret = writePresetsToFile(acs, ncs, plp)
-        let ret = writePresetsToFile(newFilename, actualFilename, plp)
+        let ret = writePresetsToFile(newFilename, actualFilename, plp, invertTailBit ? 1 : 0)
         return ret
     }
     

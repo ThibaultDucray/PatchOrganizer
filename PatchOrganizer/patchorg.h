@@ -80,7 +80,7 @@ size_t calcPresetsFileSize(PresetFile *presets) ;
 size_t writefile(u_int8_t* fileContent, const char* filename, size_t filesize) ;
 int createPatch(struct patch* p, u_int8_t *raw, size_t size);
 int createPatchList(PresetFile *presets, u_int8_t* fileContent, size_t filesize);
-size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFile *presets);
+size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFile *presets, int invertTailBit);
 void renumPatches(PresetFile* presets) ;
 void permutPatches(PresetFile* presets, int src, int dest) ;
 void orderPatches(PresetFile* presets, u_int8_t neworder[NBPATCHES]) ;
@@ -90,7 +90,7 @@ int readPresetsFromFile(const char *filename, PatchList *patchlist) ;
 u_int8_t getPatchNumForIndex(PatchList *patchlist, int i) ;
 void getPatchNameForIndex(char *name, PatchList *patchlist, int i) ;
 void setPatchNumForIndex(PatchList *patchlist, int i, u_int8_t num) ;
-long int writePresetsToFile(const char *newfilename, const char *oldfilename, PatchList *patchlist) ;
+long int writePresetsToFile(const char *newfilename, const char *oldfilename, PatchList *patchlist, int invertTailBit) ;
 
 
 #endif

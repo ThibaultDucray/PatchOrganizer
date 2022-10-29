@@ -87,10 +87,13 @@ size_t calcPresetsFileSize(PresetFile *presets) {
 
 // filesize to be calculated with calcPresetFileSize
 // TODO - warning : not really sure of the file generation... (eg manage User IR)
-size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFile *presets) {
+size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFile *presets, int invertTailBit) {
     int i;
     Patch *p;
     size_t offset;
+    size_t offset2;
+    u_int8_t sum;
+    u_int8_t tb;
 
     // copy data into dest buffer
     offset = 0;
@@ -103,9 +106,22 @@ size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFil
                 memcpy(fileContent + offset, p, presets->header->patchdesc[i].size);
                 offset += presets->header->patchdesc[i].size;
             }
-            // copy tail
-            memcpy(fileContent + offset, presets->tail, presets->tailsize);
-            offset += presets->tailsize;
+            // copy tailbit - don't know what it is
+            if (invertTailBit) {
+                tb = *(presets->tail) ? 0 : 1;
+            } else {
+                tb = *(presets->tail);
+            }
+            *(fileContent + offset++) = tb; // don't know what it is
+            // These 2 bytes (eg 06 0A) represent the result of a 8bit checksum from offset 0 to offset (filesize-2), eg 6A.
+            // byte 1 (eg. 06) is the high quartet (= 0xF & checksum >> 4)
+            // byte 2 (eg. 0A) is the low quartet (= 0xF & checksum )
+            sum = 0;
+            for (offset2 = 0; offset2 < filesize - 2; offset2++) {
+                sum += *(fileContent + offset2);
+            }
+            *(fileContent + offset++) = 0xF & (sum >> 4);
+            *(fileContent + offset++) = 0xF & sum;
         } else
             offset = 0;
     }
@@ -187,7 +203,7 @@ void setPatchNumForIndex(PatchList *patchlist, int i, u_int8_t num) {
 }
 
 // utilities for external (eg. Swift) global encapsulation
-long int writePresetsToFile(const char *newfilename, const char *oldfilename, PatchList *patchlist) {
+long int writePresetsToFile(const char *newfilename, const char *oldfilename, PatchList *patchlist, int invertTailBit) {
     Filedesc fdold;
     Filedesc fdnew;
     PresetFile presets;
@@ -229,7 +245,7 @@ long int writePresetsToFile(const char *newfilename, const char *oldfilename, Pa
         return -5;
     }
 
-    newfilesize = createPresetfileContent(fdnew.content, fdnew.size, &presets);
+    newfilesize = createPresetfileContent(fdnew.content, fdnew.size, &presets, invertTailBit);
     if (newfilesize != fdnew.size) {
         free(fdold.content);
         free(fdnew.content);

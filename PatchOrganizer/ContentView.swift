@@ -45,6 +45,7 @@ class UIPatches: ObservableObject {
     @Published var patches: [UIPatch] = []
     @Published var actualFileName : String?
     var newFileName : String?
+    @Published var invertTailBit:Bool = false
     @Published var openError = false
     @Published var emptyError = false
     @Published var saveError = false
@@ -91,7 +92,7 @@ class UIPatches: ObservableObject {
             let name = patches[Int(i)].name
             patchHandler?.setElem(actualpos: id, bank: bank, num: num, name: name, newpos: Int(i))
         }
-        if let err = patchHandler?.writePatchlist(fileName: newFileName) {
+        if let err = patchHandler?.writePatchlist(fileName: newFileName, invertTailBit: invertTailBit) {
             self.errcode = err
             saveError = (err <= 0)
         }
