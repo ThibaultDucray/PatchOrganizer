@@ -27,15 +27,17 @@ class UIPatch: Identifiable, ObservableObject {
     let id: Int
     @Published var bank: Int
     @Published var num: Int
+    @Published var userIR: Bool
     @Published var name: String
     
     static func == (lhs: UIPatch, rhs: UIPatch) -> Bool {
         return (lhs.bank == rhs.bank) && (lhs.num == rhs.num) && (lhs.name == rhs.name)
     }
     
-    init(id: Int, elem: (bank: Int, num: Int, name:String)) {
+    init(id: Int, elem: (bank: Int, num: Int, userIR: Bool, name:String)) {
         self.bank = elem.bank
         self.num = elem.num
+        self.userIR = elem.userIR
         self.name = elem.name
         self.id = id //elem.bank * 3 + elem.num
     }
@@ -109,9 +111,14 @@ struct ContentView: View {
             Text("Patches list")
             List (selection: $multiSelection) {
                 
-                ForEach(uiPatches.patches, id: \.id) { patch in
+                ForEach(uiPatches.patches.indices, id: \.self) { i in
                     //Text("\(patch.bank).\(patch.num)\t\t\(patch.name)")
-                        Label("\(patch.bank).\(patch.num)\t\t\(patch.name)", systemImage: "music.note.list")
+                    HStack {
+                        Label("\(uiPatches.patches[i].bank).\(uiPatches.patches[i].num)\t", systemImage: "music.note")
+                        Image(systemName: uiPatches.patches[i].userIR ? "circle.fill.square.fill" : "circle.square")
+                            .foregroundColor(.accentColor)
+                        TextField("", text: $uiPatches.patches[i].name)
+                    }
                 }
                 .onMove (perform: move)
             }
@@ -156,6 +163,7 @@ struct ContentView: View {
         }
         uiPatches.patches.move(fromOffsets: source, toOffset: destination)
     }
+        
     func actionOpen() {
         let panel = NSOpenPanel()
         panel.title = "Open patches list"

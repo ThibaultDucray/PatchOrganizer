@@ -24,6 +24,7 @@ import SwiftUI
 
 struct Menus: Commands {
     var cv: ContentView
+    @Environment(\.openURL) var openURL
     @ObservedObject var uiPatches: UIPatches
     
     init(cv: ContentView) {
@@ -43,16 +44,23 @@ struct Menus: Commands {
                 cv.actionReload()
             }.keyboardShortcut("R", modifiers: .command)
         }
-        CommandGroup(before: .textEditing) {
-            Picker("Tail bit", selection: $uiPatches.invertTailBit) {
-                Text("Normal tail bit").tag(false)
-                Text("Inverted tail bit").tag(true)
-            }
-        }
+
         CommandGroup(before: .saveItem) {
             Button("Save as...") {
                 cv.actionSaveAs()
             }.keyboardShortcut("S", modifiers: .command)
+            Picker("Tail bit (beta)", selection: $uiPatches.invertTailBit) {
+                Text("Normal tail bit").tag(false)
+                Text("Inverted tail bit").tag(true)
+            }
         }
+        
+        CommandGroup(replacing: .help, addition: {
+            Button("PatchOrganizer Help") {
+                openURL(URL(string: "https://github.com/ThibaultDucray/PatchOrganizer/wiki")!)
+            }
+        })
+            
+        
     }
 }

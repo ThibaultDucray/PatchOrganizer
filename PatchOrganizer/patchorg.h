@@ -31,7 +31,7 @@ typedef struct filedesc {
 #define FILEHEADER_SIZE 824 // 32 + 99 * 8
 #define FILEHEADER1_SIZE 32
 #define PATCH_HEADER_SIZE 8
-#define PATCH_NAME_SIZE 32 // maybe 32... 
+#define PATCH_NAME_SIZE 16 // maybe 16... 
 #define PATCHHEADER
 #define NBPATCHES 99
 
@@ -41,9 +41,15 @@ typedef struct patch {
     u_int8_t sep; // '\01' separator ?
     u_int8_t pos; // [1]; // patch position (currently using 8 bits but might be 16... don't care for value from 0-99)
     u_int16_t sep2; // ??
-    u_int8_t name[PATCH_NAME_SIZE]; // maybe 32... be careful there might not be a 
+    u_int8_t name[PATCH_NAME_SIZE]; // maybe 16... be careful there might not be a '\0' at the end
     u_int8_t data; // the rest of the data starting from here
 } Patch ;
+
+typedef struct userIR {
+    u_int8_t risu[4];// string "RISU" = USIR = User IR
+    u_int32_t size; // User IR desc size
+    u_int8_t data; // the rest of the data starting from here
+} UserIR;
 
 typedef struct headerpatchdesc {
     u_int32_t offset;
@@ -63,13 +69,15 @@ typedef struct headerdesc {
 typedef struct presetfile {
     HeaderDesc *header;
     Patch *patches[NBPATCHES];
+    UserIR *userIRs[NBPATCHES]; // some may be null
     u_int8_t *tail;
     size_t tailsize;
 } PresetFile ;
 
-// only numbers and names
+// only numbers, names and IRs
 typedef struct patchlist {
     u_int8_t num[NBPATCHES];
+    u_int8_t userIR[NBPATCHES];
     char name[NBPATCHES][PATCH_NAME_SIZE+1];
 } PatchList;
 
@@ -88,8 +96,10 @@ void orderPatches(PresetFile* presets, u_int8_t neworder[NBPATCHES]) ;
 // utilities for swift integration
 int readPresetsFromFile(const char *filename, PatchList *patchlist) ;
 u_int8_t getPatchNumForIndex(PatchList *patchlist, int i) ;
+u_int8_t getUserIRForIndex(PatchList *patchlist, int i) ;
 void getPatchNameForIndex(char *name, PatchList *patchlist, int i) ;
 void setPatchNumForIndex(PatchList *patchlist, int i, u_int8_t num) ;
+void setPatchNameForIndex(PatchList *patchlist, int i, const char *name) ;
 long int writePresetsToFile(const char *newfilename, const char *oldfilename, PatchList *patchlist, int invertTailBit) ;
 
 

@@ -63,6 +63,11 @@ int createPatchList(PresetFile *presets, u_int8_t* fileContent, size_t filesize)
         offset = presets->header->patchdesc[count].offset;
         j = presets->header->patchdesc[count].size;
         presets->patches[count] = (Patch *) (fileContent + offset);
+        if (presets->patches[count]->size + 8 < presets->header->patchdesc[count].size) { // presence of a User IR
+            presets->userIRs[count] = (UserIR *) (fileContent + offset + presets->patches[count]->size + 8);
+        } else {
+            presets->userIRs[count] = NULL;
+        }
     }
     offset += j;
     presets->tail = fileContent + offset;
@@ -178,6 +183,7 @@ int readPresetsFromFile(const char *filename, PatchList *patchlist) {
 
     for (i = 0; i < NBPATCHES; i++) {
         patchlist->num[i] = presets.patches[i]->pos;
+        patchlist->userIR[i] = presets.userIRs[i] != NULL ? 1 : 0;
         patchlist->name[i][PATCH_NAME_SIZE] = '\0';
         memcpy(patchlist->name[i], presets.patches[i]->name, PATCH_NAME_SIZE);
     }
@@ -192,6 +198,11 @@ u_int8_t getPatchNumForIndex(PatchList *patchlist, int i) {
     return (patchlist->num[i]);
 }
 
+// // utilities for external (eg. Swift) global encapsulation
+u_int8_t getUserIRForIndex(PatchList *patchlist, int i) {
+    return patchlist->userIR[i];
+}
+
 // utilities for external (eg. Swift) global encapsulation
 void getPatchNameForIndex(char *name, PatchList *patchlist, int i) {
     strcpy(name, patchlist->name[i]);
@@ -200,6 +211,15 @@ void getPatchNameForIndex(char *name, PatchList *patchlist, int i) {
 // utilities for external (eg. Swift) global encapsulation
 void setPatchNumForIndex(PatchList *patchlist, int i, u_int8_t num) {
     patchlist->num[i] = num;
+}
+
+// utilities for external (eg. Swift) global encapsulation
+void setPatchNameForIndex(PatchList *patchlist, int i, const char *name) {
+    char n[PATCH_NAME_SIZE + 1];
+    
+    memset(n, 0, PATCH_NAME_SIZE + 1);
+    memcpy(n, name, strlen(name) > PATCH_NAME_SIZE ? PATCH_NAME_SIZE : strlen(name));
+    memcpy(patchlist->name[i], n, PATCH_NAME_SIZE);
 }
 
 // utilities for external (eg. Swift) global encapsulation
@@ -233,8 +253,8 @@ long int writePresetsToFile(const char *newfilename, const char *oldfilename, Pa
 
     for (i = 0; i < NBPATCHES; i++) {
         presets.patches[i]->pos = patchlist->num[i];
-        // todo : rewrite names? may be hazardous
-        //memcpy(patchlist->name[i], presets.patches[i]->name, PATCH_NAME_SIZE);
+        // ewrite names - may be hazardous
+        memcpy(presets.patches[i]->name, patchlist->name[i], PATCH_NAME_SIZE);
     }
 
     // write to new file
