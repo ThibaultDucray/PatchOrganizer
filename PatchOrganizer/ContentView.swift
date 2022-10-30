@@ -62,10 +62,12 @@ class UIPatches: ObservableObject {
             if (vf) {
                 // todo? make this func async
                 patches = []
-                for i in (0 ... NBPATCHES - 1) {
-                    if let elem = patchHandler?.getElem(i: Int(i)) {
-                        let p = UIPatch(id: Int(i), elem: elem)
-                        patches.append(p)
+                if let nbPatches = patchHandler?.nbPatches {
+                    for i in (0 ... nbPatches - 1) {
+                        if let elem = patchHandler?.getElem(i: Int(i)) {
+                            let p = UIPatch(id: Int(i), elem: elem)
+                            patches.append(p)
+                        }
                     }
                 }
                 patches.sort(by: {(a:UIPatch, b:UIPatch) -> Bool in return (a.bank * 3 + a.num) < (b.bank * 3 + b.num) })
@@ -87,12 +89,14 @@ class UIPatches: ObservableObject {
         saveError = false
         self.newFileName = newFileName
 
-        for i in (0 ... NBPATCHES - 1) {
-            let id = patches[Int(i)].id
-            let bank = patches[Int(i)].bank
-            let num = patches[Int(i)].num
-            let name = patches[Int(i)].name
-            patchHandler?.setElem(actualpos: id, bank: bank, num: num, name: name, newpos: Int(i))
+        if let nbPatches = patchHandler?.nbPatches {
+            for i in (0 ... nbPatches - 1) {
+                let id = patches[Int(i)].id
+                let bank = patches[Int(i)].bank
+                let num = patches[Int(i)].num
+                let name = patches[Int(i)].name
+                patchHandler?.setElem(actualpos: id, bank: bank, num: num, name: name, newpos: Int(i))
+            }
         }
         if let err = patchHandler?.writePatchlist(fileName: newFileName, invertTailBit: invertTailBit) {
             self.errcode = err

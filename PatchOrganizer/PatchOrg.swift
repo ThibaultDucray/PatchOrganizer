@@ -30,13 +30,15 @@ class PatchHandler {
     var plp: UnsafeMutablePointer<PatchList>
     var actualFilename: String
     var newFilename: String
+    var nbPatches: Int
     
     init(fileName: String) {
         self.actualFilename = fileName
         self.newFilename = fileName
         plp = UnsafeMutablePointer<PatchList>.allocate(capacity: 1)
         let err = readPresetsFromFile(actualFilename, plp)
-        validFile = err == NBPATCHES
+        validFile = err > 0
+        nbPatches = Int(err)
         patchList = plp.pointee
     }
     

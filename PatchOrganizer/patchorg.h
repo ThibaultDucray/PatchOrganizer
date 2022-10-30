@@ -33,7 +33,7 @@ typedef struct filedesc {
 #define PATCH_HEADER_SIZE 8
 #define PATCH_NAME_SIZE 16 // maybe 16... 
 #define PATCHHEADER
-#define NBPATCHES 99
+#define MAX_NBPATCHES 499 // today : 99. We have time...
 
 typedef struct patch {
     u_int8_t mrap[4];// *header1; //[PATCHHEADER_SIZE]; // MRAP etc.
@@ -63,22 +63,24 @@ typedef struct headerdesc {
     u_int8_t sep;
     u_int16_t nbpatches;
     u_int8_t filler[16];
-    HeaderPatchDesc patchdesc [NBPATCHES];
+    //HeaderPatchDesc firstpatchdesc; // [NBPATCHES]; to be used as a pointer to the patches description. Can handle any number of patches
 } HeaderDesc ;
 
 typedef struct presetfile {
     HeaderDesc *header;
-    Patch *patches[NBPATCHES];
-    UserIR *userIRs[NBPATCHES]; // some may be null
+    HeaderPatchDesc *patchdesc;
+    Patch *patches[MAX_NBPATCHES]; // Can handle great number of patches
+    UserIR *userIRs[MAX_NBPATCHES]; // Can handle great number of patches. Some pointers in the array may be null
     u_int8_t *tail;
     size_t tailsize;
 } PresetFile ;
 
 // only numbers, names and IRs
 typedef struct patchlist {
-    u_int8_t num[NBPATCHES];
-    u_int8_t userIR[NBPATCHES];
-    char name[NBPATCHES][PATCH_NAME_SIZE+1];
+    u_int16_t nbpatches;
+    u_int8_t num[MAX_NBPATCHES]; // Can handle great number of patches
+    u_int8_t userIR[MAX_NBPATCHES]; // Can handle great number of patches
+    char name[MAX_NBPATCHES][PATCH_NAME_SIZE+1]; // Can handle great number of patches
 } PatchList;
 
 // functions declarations
@@ -91,9 +93,10 @@ int createPatchList(PresetFile *presets, u_int8_t* fileContent, size_t filesize)
 size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFile *presets, int invertTailBit);
 void renumPatches(PresetFile* presets) ;
 void permutPatches(PresetFile* presets, int src, int dest) ;
-void orderPatches(PresetFile* presets, u_int8_t neworder[NBPATCHES]) ;
+void orderPatches(PresetFile* presets, u_int8_t neworder[]) ; //[NBPATCHES]) ;
 
 // utilities for swift integration
+int getNumberOfPatches(const char *filename) ;
 int readPresetsFromFile(const char *filename, PatchList *patchlist) ;
 u_int8_t getPatchNumForIndex(PatchList *patchlist, int i) ;
 u_int8_t getUserIRForIndex(PatchList *patchlist, int i) ;

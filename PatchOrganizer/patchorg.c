@@ -58,12 +58,14 @@ int createPatchList(PresetFile *presets, u_int8_t* fileContent, size_t filesize)
     // header
     j = 0;
     presets->header = (HeaderDesc *) fileContent;
-    offset = 1;
-    for (count = 0; (count < NBPATCHES) && (offset != 0) && (offset < filesize); count++) {
-        offset = presets->header->patchdesc[count].offset;
-        j = presets->header->patchdesc[count].size;
+    offset = sizeof *(presets->header);
+    presets->patchdesc = (HeaderPatchDesc *) (fileContent + offset);
+    offset += presets->header->nbpatches * sizeof *(presets->patchdesc);
+    for (count = 0; (count < presets->header->nbpatches) && (offset != 0) && (offset < filesize); count++) {
+        offset = presets->patchdesc[count].offset;
+        j = presets->patchdesc[count].size;
         presets->patches[count] = (Patch *) (fileContent + offset);
-        if (presets->patches[count]->size + 8 < presets->header->patchdesc[count].size) { // presence of a User IR
+        if (presets->patches[count]->size + 8 < presets->patchdesc[count].size) { // presence of a User IR
             presets->userIRs[count] = (UserIR *) (fileContent + offset + presets->patches[count]->size + 8);
         } else {
             presets->userIRs[count] = NULL;
@@ -72,6 +74,8 @@ int createPatchList(PresetFile *presets, u_int8_t* fileContent, size_t filesize)
     offset += j;
     presets->tail = fileContent + offset;
     presets->tailsize = filesize - offset; // should be 3
+    if (presets->tailsize < 3) // error in reading...
+        count = 0;
     return count;
 }
 
@@ -81,9 +85,11 @@ size_t calcPresetsFileSize(PresetFile *presets) {
 
     // header
     s = sizeof(HeaderDesc);
+    // patch desc
+    s += presets->header->nbpatches * sizeof(HeaderPatchDesc);
     // content
-    for (i = 0; i < NBPATCHES; i++) {
-        s += presets->header->patchdesc[i].size;
+    for (i = 0; i < presets->header->nbpatches; i++) {
+        s += presets->patchdesc[i].size;
     }
     // tail
     s += presets->tailsize;
@@ -104,13 +110,22 @@ size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFil
     offset = 0;
     if (filesize > 0) {
         if (fileContent != NULL) {
+            // header
             memcpy(fileContent, presets->header, sizeof *(presets->header));
             offset = sizeof *(presets->header);
-            for (i = 0; i < NBPATCHES; i++) {
-                p = presets->patches[i];
-                memcpy(fileContent + offset, p, presets->header->patchdesc[i].size);
-                offset += presets->header->patchdesc[i].size;
+            // patches descriptions
+            for (i = 0; i < presets->header->nbpatches; i++) {
+                memcpy(fileContent + offset, &(presets->patchdesc[i]), sizeof presets->patchdesc[i]);
+                offset += sizeof presets->patchdesc[i];
             }
+            
+            // patches definitions (including user IR if any)
+            for (i = 0; i < presets->header->nbpatches; i++) {
+                p = presets->patches[i];
+                memcpy(fileContent + offset, p, presets->patchdesc[i].size);
+                offset += presets->patchdesc[i].size;
+            }
+            
             // copy tailbit - don't know what it is
             if (invertTailBit) {
                 tb = *(presets->tail) ? 0 : 1;
@@ -118,6 +133,7 @@ size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFil
                 tb = *(presets->tail);
             }
             *(fileContent + offset++) = tb; // don't know what it is
+            
             // These 2 bytes (eg 06 0A) represent the result of a 8bit checksum from offset 0 to offset (filesize-2), eg 6A.
             // byte 1 (eg. 06) is the high quartet (= 0xF & checksum >> 4)
             // byte 2 (eg. 0A) is the low quartet (= 0xF & checksum )
@@ -133,9 +149,9 @@ size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFil
     return offset;
 }
 
-void orderPatches(PresetFile* presets, u_int8_t neworder[NBPATCHES]) {
+void orderPatches(PresetFile* presets, u_int8_t neworder[]) {
     int i;
-    for (i = 0; i < NBPATCHES; i++) {
+    for (i = 0; i < presets->header->nbpatches; i++) {
         presets->patches[i]->pos = neworder[i];
     }
 }
@@ -153,6 +169,11 @@ size_t fileSize(const char *filename) {
     s = ftell(f);
     fclose(f);
     return s;
+}
+
+// utilities for external (eg. Swift) global encapsulation
+int getNumberOfPatches(const char *filename) {
+    return readPresetsFromFile(filename, NULL);
 }
 
 // utilities for external (eg. Swift) global encapsulation
@@ -176,12 +197,18 @@ int readPresetsFromFile(const char *filename, PatchList *patchlist) {
     }
 
     err = createPatchList(&presets, fd.content, fd.size);
-    if (err != NBPATCHES) {
+    if (err <= 0) {
         free(fd.content);
         return 0;
     }
+    
+    if (patchlist == NULL) { // only read the number of presets in file
+        free(fd.content);
+        return presets.header->nbpatches;
+    }
 
-    for (i = 0; i < NBPATCHES; i++) {
+    patchlist->nbpatches = presets.header->nbpatches;
+    for (i = 0; i < presets.header->nbpatches; i++) {
         patchlist->num[i] = presets.patches[i]->pos;
         patchlist->userIR[i] = presets.userIRs[i] != NULL ? 1 : 0;
         patchlist->name[i][PATCH_NAME_SIZE] = '\0';
@@ -190,7 +217,7 @@ int readPresetsFromFile(const char *filename, PatchList *patchlist) {
 
     free(fd.content);
 
-    return err;
+    return patchlist->nbpatches;
 }
 
 // utilities for external (eg. Swift) global encapsulation
@@ -246,14 +273,14 @@ long int writePresetsToFile(const char *newfilename, const char *oldfilename, Pa
     }
 
     err = createPatchList(&presets, fdold.content, fdold.size);
-    if (err != NBPATCHES) {
+    if (err == 0) {
         free(fdold.content);
         return -4;
     }
 
-    for (i = 0; i < NBPATCHES; i++) {
+    for (i = 0; i < presets.header->nbpatches; i++) {
         presets.patches[i]->pos = patchlist->num[i];
-        // ewrite names - may be hazardous
+        // rewrite names - may be hazardous, but funny
         memcpy(presets.patches[i]->name, patchlist->name[i], PATCH_NAME_SIZE);
     }
 
