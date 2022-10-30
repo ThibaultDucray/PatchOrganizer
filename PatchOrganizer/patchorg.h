@@ -75,12 +75,15 @@ typedef struct presetfile {
     size_t tailsize;
 } PresetFile ;
 
-// only numbers, names and IRs
+// handler for external integration such as Swift
 typedef struct patchlist {
     u_int16_t nbpatches;
     u_int8_t num[MAX_NBPATCHES]; // Can handle great number of patches
     u_int8_t userIR[MAX_NBPATCHES]; // Can handle great number of patches
     char name[MAX_NBPATCHES][PATCH_NAME_SIZE+1]; // Can handle great number of patches
+    size_t fileSize;
+    u_int8_t *fileContent;
+    PresetFile presets;
 } PatchList;
 
 // functions declarations
@@ -96,14 +99,13 @@ void permutPatches(PresetFile* presets, int src, int dest) ;
 void orderPatches(PresetFile* presets, u_int8_t neworder[]) ; //[NBPATCHES]) ;
 
 // utilities for swift integration
-int getNumberOfPatches(const char *filename) ;
 int readPresetsFromFile(const char *filename, PatchList *patchlist) ;
 u_int8_t getPatchNumForIndex(PatchList *patchlist, int i) ;
 u_int8_t getUserIRForIndex(PatchList *patchlist, int i) ;
 void getPatchNameForIndex(char *name, PatchList *patchlist, int i) ;
 void setPatchNumForIndex(PatchList *patchlist, int i, u_int8_t num) ;
 void setPatchNameForIndex(PatchList *patchlist, int i, const char *name) ;
-long int writePresetsToFile(const char *newfilename, const char *oldfilename, PatchList *patchlist, int invertTailBit) ;
+long int writePresetsToFile(const char *newfilename, PatchList *patchlist, int invertTailBit) ;
 
 
 #endif

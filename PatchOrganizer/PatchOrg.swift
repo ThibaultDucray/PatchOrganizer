@@ -36,6 +36,10 @@ class PatchHandler {
         self.actualFilename = fileName
         self.newFilename = fileName
         plp = UnsafeMutablePointer<PatchList>.allocate(capacity: 1)
+        plp.pointee.fileSize = fileSize(fileName);
+        if (plp.pointee.fileSize != 0) {
+            plp.pointee.fileContent = UnsafeMutablePointer<UInt8>.allocate(capacity: plp.pointee.fileSize)
+        }
         let err = readPresetsFromFile(actualFilename, plp)
         validFile = err > 0
         nbPatches = Int(err)
@@ -63,11 +67,14 @@ class PatchHandler {
     
     func writePatchlist(fileName: String, invertTailBit: Bool) -> Int {
         self.newFilename = fileName
-        let ret = writePresetsToFile(newFilename, actualFilename, plp, invertTailBit ? 1 : 0)
+        let ret = writePresetsToFile(newFilename, plp, invertTailBit ? 1 : 0)
         return ret
     }
     
     deinit {
+        if (patchList.fileSize != 0) {
+            patchList.fileContent.deallocate()
+        }
         plp.deallocate()
     }
     

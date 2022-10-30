@@ -172,51 +172,34 @@ size_t fileSize(const char *filename) {
 }
 
 // utilities for external (eg. Swift) global encapsulation
-int getNumberOfPatches(const char *filename) {
-    return readPresetsFromFile(filename, NULL);
-}
-
-// utilities for external (eg. Swift) global encapsulation
 int readPresetsFromFile(const char *filename, PatchList *patchlist) {
     Filedesc fd;
-    PresetFile presets;
     int err, i;
     size_t filesize;
 
-    fd.size = fileSize(filename);
+    fd.size = patchlist->fileSize;
+    fd.content = patchlist->fileContent;
     if (fd.size == 0) {
         return -1;
-    }
-    fd.content = malloc(fd.size);
-    if (fd.content == NULL) {
-        return 0;
     }
     filesize = readfile(fd.content, filename);
     if (filesize != fd.size) {
         return -1;
     }
 
-    err = createPatchList(&presets, fd.content, fd.size);
+    err = createPatchList(&(patchlist->presets), fd.content, fd.size);
     if (err <= 0) {
-        free(fd.content);
         return 0;
     }
     
-    if (patchlist == NULL) { // only read the number of presets in file
-        free(fd.content);
-        return presets.header->nbpatches;
-    }
-
-    patchlist->nbpatches = presets.header->nbpatches;
-    for (i = 0; i < presets.header->nbpatches; i++) {
-        patchlist->num[i] = presets.patches[i]->pos;
-        patchlist->userIR[i] = presets.userIRs[i] != NULL ? 1 : 0;
+    patchlist->nbpatches = patchlist->presets.header->nbpatches;
+    for (i = 0; i < patchlist->presets.header->nbpatches; i++) {
+        patchlist->num[i] = patchlist->presets.patches[i]->pos;
+        patchlist->userIR[i] = patchlist->presets.userIRs[i] != NULL ? 1 : 0;
         patchlist->name[i][PATCH_NAME_SIZE] = '\0';
-        memcpy(patchlist->name[i], presets.patches[i]->name, PATCH_NAME_SIZE);
+        memcpy(patchlist->name[i], patchlist->presets.patches[i]->name, PATCH_NAME_SIZE);
     }
-
-    free(fd.content);
-
+    
     return patchlist->nbpatches;
 }
 
@@ -250,63 +233,37 @@ void setPatchNameForIndex(PatchList *patchlist, int i, const char *name) {
 }
 
 // utilities for external (eg. Swift) global encapsulation
-long int writePresetsToFile(const char *newfilename, const char *oldfilename, PatchList *patchlist, int invertTailBit) {
-    Filedesc fdold;
+long int writePresetsToFile(const char *newfilename, PatchList *patchlist, int invertTailBit) {
     Filedesc fdnew;
-    PresetFile presets;
     int err, i;
-    size_t oldfilesize, newfilesize;
+    size_t newfilesize;
 
-    // read from actual file
-    fdold.size = fileSize(oldfilename);
-    if (fdold.size == 0) {
-        return -1;
-    }
-    fdold.content = malloc(fdold.size);
-    if (fdold.content == NULL) {
-        return -2;
-    }
-    oldfilesize = readfile(fdold.content, oldfilename);
-    if (oldfilesize != fdold.size) {
-        free(fdold.content);
-        return -3;
-    }
-
-    err = createPatchList(&presets, fdold.content, fdold.size);
-    if (err == 0) {
-        free(fdold.content);
-        return -4;
-    }
-
-    for (i = 0; i < presets.header->nbpatches; i++) {
-        presets.patches[i]->pos = patchlist->num[i];
+    // reorder and rename
+    for (i = 0; i < patchlist->presets.header->nbpatches; i++) {
+        patchlist->presets.patches[i]->pos = patchlist->num[i];
         // rewrite names - may be hazardous, but funny
-        memcpy(presets.patches[i]->name, patchlist->name[i], PATCH_NAME_SIZE);
+        memcpy(patchlist->presets.patches[i]->name, patchlist->name[i], PATCH_NAME_SIZE);
     }
 
     // write to new file
-    fdnew.size = calcPresetsFileSize(&presets);
+    fdnew.size = calcPresetsFileSize(&(patchlist->presets));
     fdnew.content = malloc(fdnew.size);
     if (fdnew.content == NULL) {
-        free(fdold.content);
         return -5;
     }
 
-    newfilesize = createPresetfileContent(fdnew.content, fdnew.size, &presets, invertTailBit);
+    newfilesize = createPresetfileContent(fdnew.content, fdnew.size, &(patchlist->presets), invertTailBit);
     if (newfilesize != fdnew.size) {
-        free(fdold.content);
         free(fdnew.content);
         return -6;
     }
 
     newfilesize = writefile(fdnew.content, newfilename, fdnew.size);
     if (newfilesize != fdnew.size) {
-        free(fdold.content);
         free(fdnew.content);
         return -7;
     }
 
-    free(fdold.content);
     free(fdnew.content);
     return newfilesize;
 }
