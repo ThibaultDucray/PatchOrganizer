@@ -235,7 +235,7 @@ void setPatchNameForIndex(PatchList *patchlist, int i, const char *name) {
 // utilities for external (eg. Swift) global encapsulation
 long int writePresetsToFile(const char *newfilename, PatchList *patchlist, int invertTailBit) {
     Filedesc fdnew;
-    int err, i;
+    int i;
     size_t newfilesize;
 
     // reorder and rename
