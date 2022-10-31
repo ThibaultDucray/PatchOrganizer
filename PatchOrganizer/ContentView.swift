@@ -115,13 +115,12 @@ struct ContentView: View {
             Text("Patches list")
             List (selection: $multiSelection) {
                 
-                ForEach(uiPatches.patches.indices, id: \.self) { i in
-                    //Text("\(patch.bank).\(patch.num)\t\t\(patch.name)")
+                ForEach($uiPatches.patches, id: \.id) { $p in
                     HStack {
-                        Label("\(uiPatches.patches[i].bank).\(uiPatches.patches[i].num)\t", systemImage: "music.note")
-                        Image(systemName: uiPatches.patches[i].userIR ? "circle.fill.square.fill" : "circle.square")
+                        Label("\(p.bank).\(p.num)\t", systemImage: "music.note")
+                        Image(systemName: p.userIR ? "circle.fill.square.fill" : "circle.square")
                             .foregroundColor(.accentColor)
-                        TextField("", text: $uiPatches.patches[i].name)
+                        TextField("", text: $p.name)
                     }
                 }
                 .onMove (perform: move)
@@ -161,10 +160,6 @@ struct ContentView: View {
 
         
     func move(from source: IndexSet, to destination: Int) {
-        var s = ""
-        source.forEach { elem in
-            s = s + "\(elem) "
-        }
         uiPatches.patches.move(fromOffsets: source, toOffset: destination)
     }
         
@@ -185,8 +180,6 @@ struct ContentView: View {
         }
         let panel = NSSavePanel() //NSOpenPanel()
         panel.title = "Save patches list"
-        //panel.allowsMultipleSelection = false
-        //panel.canChooseDirectories = false
         if panel.runModal() == .OK {
             uiPatches.writeToFile(newFileName: panel.url?.path ?? "<none>")
         }

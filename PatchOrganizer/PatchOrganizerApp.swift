@@ -29,7 +29,7 @@ struct PatchOrganizerApp: App {
     
     var body: some Scene {
         WindowGroup {
-            // main view
+            // main view 
             cv
         }
         .commands {

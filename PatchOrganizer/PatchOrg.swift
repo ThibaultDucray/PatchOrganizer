@@ -32,6 +32,7 @@ class PatchHandler {
     var newFilename: String
     var nbPatches: Int
     
+    // all allocations are now in charge of the caller, ie PatchHandler
     init(fileName: String) {
         self.actualFilename = fileName
         self.newFilename = fileName

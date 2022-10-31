@@ -171,7 +171,7 @@ size_t fileSize(const char *filename) {
     return s;
 }
 
-// utilities for external (eg. Swift) global encapsulation
+// utilities for external (eg. Swift) global encapsulation 
 int readPresetsFromFile(const char *filename, PatchList *patchlist) {
     Filedesc fd;
     int err, i;

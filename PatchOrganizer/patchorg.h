@@ -63,7 +63,6 @@ typedef struct headerdesc {
     u_int8_t sep;
     u_int16_t nbpatches;
     u_int8_t filler[16];
-    //HeaderPatchDesc firstpatchdesc; // [NBPATCHES]; to be used as a pointer to the patches description. Can handle any number of patches
 } HeaderDesc ;
 
 typedef struct presetfile {

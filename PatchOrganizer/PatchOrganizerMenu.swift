@@ -55,6 +55,7 @@ struct Menus: Commands {
             }
         }
         
+        // help opens url on github
         CommandGroup(replacing: .help, addition: {
             Button("PatchOrganizer Help") {
                 openURL(URL(string: "https://github.com/ThibaultDucray/PatchOrganizer/wiki")!)
