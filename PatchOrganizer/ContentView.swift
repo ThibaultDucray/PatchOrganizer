@@ -106,7 +106,9 @@ class UIPatches: ObservableObject {
 }
 
 struct ContentView: View {
+    @Environment(\.openURL) var openURL
     @State private var multiSelection = Set<Int>()
+    @ObservedObject var version = VersionControler()
     @ObservedObject var uiPatches = UIPatches()
     
     var body: some View {
@@ -130,11 +132,18 @@ struct ContentView: View {
             Button("OK", role: .cancel, action: {})
             })
         .alert("Could not save as \(uiPatches.newFileName ?? "none")\nError code \(uiPatches.errcode)", isPresented: $uiPatches.saveError, actions: {
-            Button("OK", role: .cancel, action: {})
+            Button("Cancel", role: .cancel, action: {})
             })
         .alert("Could not open \(uiPatches.actualFileName ?? "none")", isPresented: $uiPatches.openError, actions: {
             Button("OK", role: .cancel, action: {})
             })
+        .alert("New version available!\nActual: \(version.actualVersion)\nNew: \(version.distantVersion ?? "new")", isPresented: $version.newVersion, actions: {
+            Button("Cancel", role: .cancel, action: {})
+            Button("Open website", role: .cancel, action: {
+                openURL(URL(string: "https://github.com/ThibaultDucray/PatchOrganizer/releases/")!)
+            })
+
+        })
         .navigationTitle("Ampero Patch Organizer")
         .refreshable {
         }
@@ -164,6 +173,8 @@ struct ContentView: View {
     }
         
     func actionOpen() {
+        version.control()
+
         let panel = NSOpenPanel()
         panel.title = "Open patches list"
         panel.allowsMultipleSelection = false

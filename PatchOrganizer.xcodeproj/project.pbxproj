@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		10218A1D291177D9009DFEA0 /* VersionControler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10218A1C291177D9009DFEA0 /* VersionControler.swift */; };
 		102C60D328FFD3E90088D627 /* patchorg.c in Sources */ = {isa = PBXBuildFile; fileRef = 102C60D228FFD3E90088D627 /* patchorg.c */; };
 		102C60D528FFD4400088D627 /* PatchOrg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102C60D428FFD4400088D627 /* PatchOrg.swift */; };
 		1031520D28FDA7910066B958 /* PatchOrganizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031520C28FDA7910066B958 /* PatchOrganizerApp.swift */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		10218A1C291177D9009DFEA0 /* VersionControler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionControler.swift; sourceTree = "<group>"; };
 		102C60D028FFD3E90088D627 /* PatchOrganizer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PatchOrganizer-Bridging-Header.h"; sourceTree = "<group>"; };
 		102C60D128FFD3E90088D627 /* patchorg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = patchorg.h; sourceTree = "<group>"; };
 		102C60D228FFD3E90088D627 /* patchorg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = patchorg.c; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				102C60D228FFD3E90088D627 /* patchorg.c */,
 				102C60D128FFD3E90088D627 /* patchorg.h */,
 				1031520C28FDA7910066B958 /* PatchOrganizerApp.swift */,
+				10218A1C291177D9009DFEA0 /* VersionControler.swift */,
 				105F18B9290832FD00C32702 /* PatchOrganizerMenu.swift */,
 				105F18B72908301F00C32702 /* Credits.rtf */,
 				1031520E28FDA7910066B958 /* ContentView.swift */,
@@ -284,6 +287,7 @@
 				1031520F28FDA7910066B958 /* ContentView.swift in Sources */,
 				1031520D28FDA7910066B958 /* PatchOrganizerApp.swift in Sources */,
 				105F18BA290832FD00C32702 /* PatchOrganizerMenu.swift in Sources */,
+				10218A1D291177D9009DFEA0 /* VersionControler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -456,7 +460,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.tducray.PatchOrganizer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -489,7 +493,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.tducray.PatchOrganizer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
