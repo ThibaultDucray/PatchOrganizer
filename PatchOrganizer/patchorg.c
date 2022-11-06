@@ -36,10 +36,6 @@ size_t readfile(u_int8_t* fileContent, const char* filename) {
     return frs;
 }
 
-size_t presetsFileSize(PresetFile *presets) {
-    return presets->header->size + sizeof presets->header->tsrp + sizeof presets->header->size;
-}
-
 size_t writefile(u_int8_t* fileContent, const char* filename, size_t filesize) {
     FILE *f;
     size_t i;
@@ -51,32 +47,92 @@ size_t writefile(u_int8_t* fileContent, const char* filename, size_t filesize) {
     return i;
 }
 
-int createPatchList(PresetFile *presets, u_int8_t* fileContent, size_t filesize) {
-    size_t offset, j;
+void freePresetFile(PresetFile *presets) {
+    int i;
+    for (i = 0; i < presets->header->nbpatches; i++) {
+        if (presets->patches[i] != NULL) free(presets->patches[i]);
+    }
+    if (presets->header != NULL) free(presets->header);
+    memset(presets, 0, sizeof *presets);
+}
+
+// allocate the content of the PresetFile struct with given data in fileContent
+// the PresetFile structure pointed be the given pointer will be erased
+int createPresetsFromFile(PresetFile *presets, Filedesc *fd, const char *filename) {
+    u_int8_t* fileContent;
+    size_t filesize;
+    size_t size, offset;
+    void *alloc;
     int count;
 
+    fileContent = fd->content;
+    filesize = fd->size;
+    size = readfile(fileContent, filename);
+    if (size != filesize) {
+        return 0;
+    }
+    
+    // erase
+    memset(presets, 0, sizeof *presets);
+
     // header
-    j = 0;
     presets->header = (HeaderDesc *) fileContent;
+    size = sizeof *(presets->header) + presets->header->nbpatches * sizeof *(presets->patchdesc);
+    alloc = malloc(size);
+    presets->header = alloc;
+    memcpy(presets->header, fileContent, sizeof *(presets->header));
+    
+    // patchdesc
     offset = sizeof *(presets->header);
-    presets->patchdesc = (HeaderPatchDesc *) (fileContent + offset);
-    offset += presets->header->nbpatches * sizeof *(presets->patchdesc);
+    presets->patchdesc = alloc + offset;
+    memcpy(presets->patchdesc, fileContent + offset, presets->header->nbpatches * sizeof *(presets->patchdesc));
+    
+    offset += presets->header->nbpatches * sizeof *(presets->patchdesc); // should be 824 for a 99 patches file
+
     for (count = 0; (count < presets->header->nbpatches) && (offset != 0) && (offset < filesize); count++) {
         offset = presets->patchdesc[count].offset;
-        j = presets->patchdesc[count].size;
-        presets->patches[count] = (Patch *) (fileContent + offset);
+        size = presets->patchdesc[count].size;
+        alloc = malloc(size);
+        presets->patches[count] = alloc;
+        memcpy(presets->patches[count], fileContent + offset, size);
         if (presets->patches[count]->size + 8 < presets->patchdesc[count].size) { // presence of a User IR
-            presets->userIRs[count] = (UserIR *) (fileContent + offset + presets->patches[count]->size + 8);
+            presets->userIRs[count] = (UserIR *) (alloc + presets->patches[count]->size + sizeof presets->patches[count]->mrap + sizeof presets->patches[count]->size);
         } else {
             presets->userIRs[count] = NULL;
         }
     }
-    offset += j;
-    presets->tail = fileContent + offset;
-    presets->tailsize = filesize - offset; // should be 3
-    if (presets->tailsize < 3) // error in reading...
+    offset += size;
+    if (filesize - offset != TAILSIZE) { // error in reading...
         count = 0;
+        freePresetFile(presets);
+    } else {
+        memcpy(presets->tail, fileContent + offset, TAILSIZE);
+    }
     return count;
+}
+
+// create a single patch presetfile struct
+// all given structs must have been allocated
+long int writePresetsFileFromOnePatch(const char *fileName, PresetFile *fromPresets, int index, int invertTailBit) {
+    PresetFile presets;
+    HeaderPatchDesc patchDesc;
+    HeaderDesc header;
+    long int err;
+    
+    memcpy(&header, fromPresets->header, sizeof header);
+    presets.header = &header;
+    patchDesc.size = fromPresets->patchdesc[index].size;
+    header.size = sizeof header + sizeof patchDesc + patchDesc.size - sizeof header.tsrp - sizeof header.size;
+    header.nbpatches = 1;
+    patchDesc.offset = sizeof header + sizeof patchDesc;
+    presets.patchdesc = &patchDesc;
+    presets.patches[0] = malloc(patchDesc.size);
+    memcpy(presets.patches[0], fromPresets->patches[index], patchDesc.size);
+    presets.patches[0]->pos = 0x62; // = 98 as seen in 1-patch files (
+    presets.tail[0] = fromPresets->tail[0];
+    err = writePresetsToFile(fileName, &presets, invertTailBit);
+    free(presets.patches[0]);
+    return err;
 }
 
 size_t calcPresetsFileSize(PresetFile *presets) {
@@ -92,12 +148,12 @@ size_t calcPresetsFileSize(PresetFile *presets) {
         s += presets->patchdesc[i].size;
     }
     // tail
-    s += presets->tailsize;
+    s += TAILSIZE;
     return s;
 }
 
 // filesize to be calculated with calcPresetFileSize
-// TODO - warning : not really sure of the file generation... (eg manage User IR)
+// TODO - warning : not really sure of the file generation... (eg better manage offsets in headerpatchdesc and User IRs?)
 size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFile *presets, int invertTailBit) {
     int i;
     Patch *p;
@@ -149,6 +205,29 @@ size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFil
     return offset;
 }
 
+// it doesn't copy, it just affects new pointers
+void exchangePatchesInPreset(PresetFile* destpresets, int dest, PresetFile *sourcepresets, int source) {
+    u_int32_t oldPatchSize;
+    u_int8_t oldPos;
+    Patch *oldp;
+    
+    oldPatchSize = destpresets->patchdesc[dest].size;
+    oldPos = destpresets->patches[dest]->pos;
+    
+    oldp = destpresets->patches[dest];
+    destpresets->patchdesc[dest].size = sourcepresets->patchdesc[source].size;
+    destpresets->patches[dest] = sourcepresets->patches[source];
+    destpresets->patches[dest]->pos = oldPos;
+    sourcepresets->patches[source] = oldp; // this allows the memory to be freed when freeing sourcepresets
+    
+    // recalc offset of next patch
+    if (dest < destpresets->header->nbpatches - 1) {
+        destpresets->patchdesc[dest + 1].offset = destpresets->patchdesc[dest + 1].offset - oldPatchSize + destpresets->patchdesc[dest].size;
+    }
+    // recalc file size
+    destpresets->header->size = destpresets->header->size - oldPatchSize + destpresets->patchdesc[dest].size;
+}
+
 void orderPatches(PresetFile* presets, u_int8_t neworder[]) {
     int i;
     for (i = 0; i < presets->header->nbpatches; i++) {
@@ -171,88 +250,53 @@ size_t fileSize(const char *filename) {
     return s;
 }
 
-// utilities for external (eg. Swift) global encapsulation 
-int readPresetsFromFile(const char *filename, PatchList *patchlist) {
-    Filedesc fd;
-    int err, i;
-    size_t filesize;
-
-    fd.size = patchlist->fileSize;
-    fd.content = patchlist->fileContent;
-    if (fd.size == 0) {
-        return -1;
-    }
-    filesize = readfile(fd.content, filename);
-    if (filesize != fd.size) {
-        return -1;
-    }
-
-    err = createPatchList(&(patchlist->presets), fd.content, fd.size);
-    if (err <= 0) {
-        return 0;
-    }
-    
-    patchlist->nbpatches = patchlist->presets.header->nbpatches;
-    for (i = 0; i < patchlist->presets.header->nbpatches; i++) {
-        patchlist->num[i] = patchlist->presets.patches[i]->pos;
-        patchlist->userIR[i] = patchlist->presets.userIRs[i] != NULL ? 1 : 0;
-        patchlist->name[i][PATCH_NAME_SIZE] = '\0';
-        memcpy(patchlist->name[i], patchlist->presets.patches[i]->name, PATCH_NAME_SIZE);
-    }
-    
-    return patchlist->nbpatches;
-}
-
 // utilities for external (eg. Swift) global encapsulation
-u_int8_t getPatchNumForIndex(PatchList *patchlist, int i) {
-    return (patchlist->num[i]);
+u_int8_t getPatchNumForIndex(PresetFile *presets, int i) {
+    return presets->patches[i]->pos;
 }
 
 // // utilities for external (eg. Swift) global encapsulation
-u_int8_t getUserIRForIndex(PatchList *patchlist, int i) {
-    return patchlist->userIR[i];
+u_int8_t getUserIRForIndex(PresetFile *presets, int i) {
+    return presets->userIRs[i] != NULL ? 1 : 0;
+    //return patchlist->userIR[i];
 }
 
 // utilities for external (eg. Swift) global encapsulation
-void getPatchNameForIndex(char *name, PatchList *patchlist, int i) {
-    strcpy(name, patchlist->name[i]);
+void getPatchNameForIndex(char *name, PresetFile *presets, int i) {
+    memset(name, 0, PATCH_NAME_SIZE + 1);
+    memcpy(name, presets->patches[i]->name, PATCH_NAME_SIZE);
 }
 
 // utilities for external (eg. Swift) global encapsulation
-void setPatchNumForIndex(PatchList *patchlist, int i, u_int8_t num) {
-    patchlist->num[i] = num;
+void setPatchNumForIndex(PresetFile *presets, int i, u_int8_t num) {
+    presets->patches[i]->pos = num;
+    //patchlist->num[i] = num;
 }
 
 // utilities for external (eg. Swift) global encapsulation
-void setPatchNameForIndex(PatchList *patchlist, int i, const char *name) {
+void setPatchNameForIndex(PresetFile *presets, int i, const char *name) {
     char n[PATCH_NAME_SIZE + 1];
     
     memset(n, 0, PATCH_NAME_SIZE + 1);
     memcpy(n, name, strlen(name) > PATCH_NAME_SIZE ? PATCH_NAME_SIZE : strlen(name));
-    memcpy(patchlist->name[i], n, PATCH_NAME_SIZE);
+    memcpy(presets->patches[i]->name, n, PATCH_NAME_SIZE);
 }
 
 // utilities for external (eg. Swift) global encapsulation
-long int writePresetsToFile(const char *newfilename, PatchList *patchlist, int invertTailBit) {
+long int writePresetsToFile(const char *newfilename, PresetFile *presets, int invertTailBit) {
     Filedesc fdnew;
-    int i;
     size_t newfilesize;
 
-    // reorder and rename
-    for (i = 0; i < patchlist->presets.header->nbpatches; i++) {
-        patchlist->presets.patches[i]->pos = patchlist->num[i];
-        // rewrite names - may be hazardous, but funny
-        memcpy(patchlist->presets.patches[i]->name, patchlist->name[i], PATCH_NAME_SIZE);
-    }
+    //reorderAndRenamePatches(patchlist); // should have been done before, but we never know...
 
     // write to new file
-    fdnew.size = calcPresetsFileSize(&(patchlist->presets));
+    fdnew.size = calcPresetsFileSize(presets);
     fdnew.content = malloc(fdnew.size);
     if (fdnew.content == NULL) {
         return -5;
     }
 
-    newfilesize = createPresetfileContent(fdnew.content, fdnew.size, &(patchlist->presets), invertTailBit);
+    newfilesize = createPresetfileContent(fdnew.content, fdnew.size, presets, invertTailBit);
     if (newfilesize != fdnew.size) {
         free(fdnew.content);
         return -6;

@@ -33,7 +33,7 @@ struct PatchOrganizerApp: App {
             cv
         }
         .commands {
-            Menus(cv: cv)
+            Menus(uiPatches: cv.uiPatches, ms: cv.ms)
         }
     }
 }

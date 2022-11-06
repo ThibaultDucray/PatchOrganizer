@@ -22,12 +22,10 @@
 
 import Foundation
 
-
-
 class PatchHandler {
-    var patchList: PatchList
+    var presets = PresetFile()
     var validFile: Bool
-    var plp: UnsafeMutablePointer<PatchList>
+    var filedesc = Filedesc()
     var actualFilename: String
     var newFilename: String
     var nbPatches: Int
@@ -36,47 +34,55 @@ class PatchHandler {
     init(fileName: String) {
         self.actualFilename = fileName
         self.newFilename = fileName
-        plp = UnsafeMutablePointer<PatchList>.allocate(capacity: 1)
-        plp.pointee.fileSize = fileSize(fileName);
-        if (plp.pointee.fileSize != 0) {
-            plp.pointee.fileContent = UnsafeMutablePointer<UInt8>.allocate(capacity: plp.pointee.fileSize)
+        filedesc.size = fileSize(fileName);
+        if (filedesc.size != 0) {
+            filedesc.content = UnsafeMutablePointer<UInt8>.allocate(capacity: filedesc.size)
         }
-        let err = readPresetsFromFile(actualFilename, plp)
+        let err = createPresetsFromFile(&presets, &filedesc, fileName)
+        //let err = readPresetsFromFile(actualFilename, &patchList, &filedesc)
         validFile = err > 0
         nbPatches = Int(err)
-        patchList = plp.pointee
     }
     
     func getElem(i: Int) -> (bank: Int, num: Int, userIR: Bool, name: String) {
         let cs = UnsafeMutablePointer<CChar>.allocate(capacity: Int(PATCH_NAME_SIZE) + 1)
-        getPatchNameForIndex(cs, plp, Int32(i))
+        getPatchNameForIndex(cs, &presets, Int32(i))
         let name = String(cString: cs, encoding: String.Encoding.utf8) ?? "<noname>"
         cs.deallocate()
         
-        let num = getPatchNumForIndex(plp, Int32(i))
+        let num = getPatchNumForIndex(&presets, Int32(i))
         let b = Int(num / 3) + 1
         let n = Int(num) - (b-1) * 3 + 1
-        let u = getUserIRForIndex(plp, Int32(i)) == 0 ? false : true
+        let u = getUserIRForIndex(&presets, Int32(i)) == 0 ? false : true
         return (bank: Int(b), num: Int(n), userIR: u, name: name)
     }
     
-    func setElem(actualpos: Int, bank: Int, num: Int, name: String, newpos: Int) {
-        setPatchNumForIndex(plp, Int32(actualpos), UInt8(newpos))
+    func exportOnePatch(fileName: String, index: Int, invertTailBit: Bool) -> Int {
+        return writePresetsFileFromOnePatch(fileName, &presets, Int32(index), invertTailBit ? 1 : 0)
+    }
+    
+    func setElem(actualpos: Int, name: String, newpos: Int) {
+        setPatchNumForIndex(&presets, Int32(actualpos), UInt8(newpos))
         // set name - might be hazardous
-        setPatchNameForIndex(plp, Int32(actualpos), name)
+        setPatchNameForIndex(&presets, Int32(actualpos), name)
     }
     
     func writePatchlist(fileName: String, invertTailBit: Bool) -> Int {
         self.newFilename = fileName
-        let ret = writePresetsToFile(newFilename, plp, invertTailBit ? 1 : 0)
+        let ret = writePresetsToFile(newFilename, &presets, invertTailBit ? 1 : 0)
         return ret
     }
     
+    // warning with memory management... this is binded to C code that does not copy memory but reaffects pointers
+    func replacePatch(source: PatchHandler, from: Int, to: Int) {
+        exchangePatchesInPreset(&presets, Int32(to), &(source.presets), Int32(from))
+    }
+    
     deinit {
-        if (patchList.fileSize != 0) {
-            patchList.fileContent.deallocate()
+        if (filedesc.size != 0) {
+            filedesc.content.deallocate()
         }
-        plp.deallocate()
+        freePresetFile(&presets)
     }
     
     

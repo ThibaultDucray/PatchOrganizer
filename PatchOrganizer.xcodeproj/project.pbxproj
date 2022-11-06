@@ -19,6 +19,7 @@
 		1031522B28FDA7930066B958 /* PatchOrganizerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031522A28FDA7930066B958 /* PatchOrganizerUITestsLaunchTests.swift */; };
 		105F18B82908302000C32702 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 105F18B72908301F00C32702 /* Credits.rtf */; };
 		105F18BA290832FD00C32702 /* PatchOrganizerMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105F18B9290832FD00C32702 /* PatchOrganizerMenu.swift */; };
+		10ACE13F29146B8A0037479D /* UIPatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ACE13E29146B8A0037479D /* UIPatch.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		105F18B62907FFEE00C32702 /* license.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
 		105F18B72908301F00C32702 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		105F18B9290832FD00C32702 /* PatchOrganizerMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchOrganizerMenu.swift; sourceTree = "<group>"; };
+		10ACE13E29146B8A0037479D /* UIPatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIPatch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,18 +110,19 @@
 		1031520B28FDA7910066B958 /* PatchOrganizer */ = {
 			isa = PBXGroup;
 			children = (
-				102C60D228FFD3E90088D627 /* patchorg.c */,
-				102C60D128FFD3E90088D627 /* patchorg.h */,
 				1031520C28FDA7910066B958 /* PatchOrganizerApp.swift */,
 				10218A1C291177D9009DFEA0 /* VersionControler.swift */,
 				105F18B9290832FD00C32702 /* PatchOrganizerMenu.swift */,
-				105F18B72908301F00C32702 /* Credits.rtf */,
+				10ACE13E29146B8A0037479D /* UIPatch.swift */,
 				1031520E28FDA7910066B958 /* ContentView.swift */,
-				105F18B62907FFEE00C32702 /* license.txt */,
 				102C60D428FFD4400088D627 /* PatchOrg.swift */,
+				102C60D228FFD3E90088D627 /* patchorg.c */,
+				102C60D128FFD3E90088D627 /* patchorg.h */,
+				102C60D028FFD3E90088D627 /* PatchOrganizer-Bridging-Header.h */,
+				105F18B72908301F00C32702 /* Credits.rtf */,
+				105F18B62907FFEE00C32702 /* license.txt */,
 				1031521028FDA7930066B958 /* Assets.xcassets */,
 				1031521528FDA7930066B958 /* PatchOrganizer.entitlements */,
-				102C60D028FFD3E90088D627 /* PatchOrganizer-Bridging-Header.h */,
 				1031521228FDA7930066B958 /* Preview Content */,
 			);
 			path = PatchOrganizer;
@@ -287,6 +290,7 @@
 				1031520F28FDA7910066B958 /* ContentView.swift in Sources */,
 				1031520D28FDA7910066B958 /* PatchOrganizerApp.swift in Sources */,
 				105F18BA290832FD00C32702 /* PatchOrganizerMenu.swift in Sources */,
+				10ACE13F29146B8A0037479D /* UIPatch.swift in Sources */,
 				10218A1D291177D9009DFEA0 /* VersionControler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -460,7 +464,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.tducray.PatchOrganizer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -493,7 +497,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.tducray.PatchOrganizer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

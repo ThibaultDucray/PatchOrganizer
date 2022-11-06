@@ -28,12 +28,9 @@ typedef struct filedesc {
 } Filedesc ;
 
 // patch header is "MRAPxxxxxPxxNAME"
-#define FILEHEADER_SIZE 824 // 32 + 99 * 8
-#define FILEHEADER1_SIZE 32
-#define PATCH_HEADER_SIZE 8
-#define PATCH_NAME_SIZE 16 // maybe 16... 
-#define PATCHHEADER
-#define MAX_NBPATCHES 499 // today : 99. We have time...
+#define PATCH_NAME_SIZE 16 // maybe 16...
+#define MAX_NBPATCHES 255 // today : 99. We have time...
+#define TAILSIZE 3
 
 typedef struct patch {
     u_int8_t mrap[4];// *header1; //[PATCHHEADER_SIZE]; // MRAP etc.
@@ -42,7 +39,7 @@ typedef struct patch {
     u_int8_t pos; // [1]; // patch position (currently using 8 bits but might be 16... don't care for value from 0-99)
     u_int16_t sep2; // ??
     u_int8_t name[PATCH_NAME_SIZE]; // maybe 16... be careful there might not be a '\0' at the end
-    u_int8_t data; // the rest of the data starting from here
+    u_int8_t data; // the rest of the data starting from here (use this field as a pointer with &)
 } Patch ;
 
 typedef struct userIR {
@@ -70,41 +67,38 @@ typedef struct presetfile {
     HeaderPatchDesc *patchdesc;
     Patch *patches[MAX_NBPATCHES]; // Can handle great number of patches
     UserIR *userIRs[MAX_NBPATCHES]; // Can handle great number of patches. Some pointers in the array may be null
-    u_int8_t *tail;
-    size_t tailsize;
+    u_int8_t tail[TAILSIZE];
 } PresetFile ;
 
 // handler for external integration such as Swift
-typedef struct patchlist {
-    u_int16_t nbpatches;
-    u_int8_t num[MAX_NBPATCHES]; // Can handle great number of patches
-    u_int8_t userIR[MAX_NBPATCHES]; // Can handle great number of patches
-    char name[MAX_NBPATCHES][PATCH_NAME_SIZE+1]; // Can handle great number of patches
-    size_t fileSize;
-    u_int8_t *fileContent;
-    PresetFile presets;
-} PatchList;
+//typedef struct patchlist {
+//    u_int16_t nbpatches;
+//    u_int8_t num[MAX_NBPATCHES]; // Can handle great number of patches
+//    u_int8_t userIR[MAX_NBPATCHES]; // Can handle great number of patches
+//    char name[MAX_NBPATCHES][PATCH_NAME_SIZE+1]; // Can handle great number of patches
+//    PresetFile presets;
+//} PatchList;
 
 // functions declarations
 size_t fileSize(const char *filename) ;
 size_t readfile(u_int8_t* fileContent, const char* filename) ;
 size_t calcPresetsFileSize(PresetFile *presets) ;
 size_t writefile(u_int8_t* fileContent, const char* filename, size_t filesize) ;
-int createPatch(struct patch* p, u_int8_t *raw, size_t size);
-int createPatchList(PresetFile *presets, u_int8_t* fileContent, size_t filesize);
+int createPresetsFromFile(PresetFile *presets, Filedesc *fd, const char *filename) ;
+long int writePresetsFileFromOnePatch(const char *fileName, PresetFile *fromPresets, int index, int invertTailBit) ;
+void freePresetFile(PresetFile *presets) ;
 size_t createPresetfileContent(u_int8_t* fileContent, size_t filesize, PresetFile *presets, int invertTailBit);
-void renumPatches(PresetFile* presets) ;
+void exchangePatchesInPreset(PresetFile* destpresets, int dest, PresetFile *sourcepreset, int source) ;
 void permutPatches(PresetFile* presets, int src, int dest) ;
 void orderPatches(PresetFile* presets, u_int8_t neworder[]) ; //[NBPATCHES]) ;
 
 // utilities for swift integration
-int readPresetsFromFile(const char *filename, PatchList *patchlist) ;
-u_int8_t getPatchNumForIndex(PatchList *patchlist, int i) ;
-u_int8_t getUserIRForIndex(PatchList *patchlist, int i) ;
-void getPatchNameForIndex(char *name, PatchList *patchlist, int i) ;
-void setPatchNumForIndex(PatchList *patchlist, int i, u_int8_t num) ;
-void setPatchNameForIndex(PatchList *patchlist, int i, const char *name) ;
-long int writePresetsToFile(const char *newfilename, PatchList *patchlist, int invertTailBit) ;
-
+//int readPresetsFromFile(const char *filename, PatchList *patchlist, Filedesc *fd) ;
+u_int8_t getPatchNumForIndex(PresetFile *presets, int i) ;
+u_int8_t getUserIRForIndex(PresetFile *presets, int i) ;
+void getPatchNameForIndex(char *name, PresetFile *presets, int i) ;
+void setPatchNumForIndex(PresetFile *presets, int i, u_int8_t num) ;
+void setPatchNameForIndex(PresetFile *presets, int i, const char *name) ;
+long int writePresetsToFile(const char *newfilename, PresetFile *presets, int invertTailBit) ;
 
 #endif
