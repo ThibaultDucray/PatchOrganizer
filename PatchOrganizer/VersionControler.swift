@@ -45,7 +45,7 @@ class VersionControler: ObservableObject {
     
     func control() {
         if let dv = distantVersion {
-            newVersion = dv != actualVersion
+            newVersion = greater(low: actualVersion, hi: dv)
         }
     }
     
@@ -53,5 +53,35 @@ class VersionControler: ObservableObject {
         let url1 = URL(string: "https://api.github.com/repos/ThibaultDucray/PatchOrganizer/releases/latest")!
         let vtag = try await URLSession.shared.getGitHubRelease(from: url1)
         distantVersion = vtag.tag_name
+    }
+    
+    func versionToInt(s: String) -> [UInt16] {
+        let s1 = s.uppercased().replacingOccurrences(of: "V", with: "")
+        var s1s = s1.split(separator: ".")
+        while s1s.count < 3 {
+            s1s.append("0")
+        }
+        var val: [UInt16] = []
+        for i in 0..<s1s.count {
+            let h = UInt16(s1s[i]) ?? 0
+            val.append(h)
+        }
+        return val
+    }
+    
+    func greater(low: String, hi: String) -> Bool {
+        let lowv = versionToInt(s: low)
+        let hiv = versionToInt(s: hi)
+        for i in 0..<lowv.count {
+            if hiv[i] != lowv[i] {
+                if hiv[i] > lowv[i] {
+                    return true
+                }
+                else {
+                    return false
+                }
+            }
+        }
+        return false
     }
 }
