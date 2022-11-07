@@ -23,36 +23,44 @@
 import SwiftUI
 
 struct Menus: Commands {
-    var cv: ContentView
     @Environment(\.openURL) var openURL
     @ObservedObject var uiPatches: UIPatches
-    
-    init(cv: ContentView) {
-        self.cv = cv
-        uiPatches = cv.uiPatches
-    }
+    @ObservedObject var ms: MultiSel
 
     var body: some Commands {
         EmptyCommands()
 
         CommandGroup(before: .newItem) {
             Button("Open...") {
-                cv.actionOpen()
+                uiPatches.actionOpen()
             }.keyboardShortcut("O", modifiers: .command)
             
             Button("Reload") {
-                cv.actionReload()
-            }.keyboardShortcut("R", modifiers: .command)
+                uiPatches.actionReload()
+            }.keyboardShortcut("L", modifiers: .command)
         }
 
         CommandGroup(before: .saveItem) {
             Button("Save as...") {
-                cv.actionSaveAs()
+                uiPatches.actionSaveAs()
             }.keyboardShortcut("S", modifiers: .command)
             Picker("Tail bit (beta)", selection: $uiPatches.invertTailBit) {
                 Text("Normal tail bit").tag(false)
                 Text("Inverted tail bit").tag(true)
             }
+        }
+        
+        CommandMenu("Patch") {
+            Button("Export 1 patch") {
+                uiPatches.exportOnePatch(index: ms.multiSelection.first ?? 0)
+            }
+            .disabled(ms.multiSelection.count != 1)
+            .keyboardShortcut("E", modifiers: .command)
+            Button("Replace 1 patch") {
+                uiPatches.actionReplace(index: ms.multiSelection.first ?? 0)
+            }
+            .disabled(ms.multiSelection.count != 1)
+            .keyboardShortcut("R", modifiers: .command)
         }
         
         // help opens url on github
@@ -61,7 +69,5 @@ struct Menus: Commands {
                 openURL(URL(string: "https://github.com/ThibaultDucray/PatchOrganizer/wiki")!)
             }
         })
-            
-        
     }
 }
