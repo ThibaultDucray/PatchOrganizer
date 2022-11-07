@@ -1,3 +1,6 @@
+// patchorg.h
+// PatchOrganizer
+//
 // This file is part of PatchOrganizer.
 //
 // PatchOrganizer is free software: you can redistribute it and/or modify it under the

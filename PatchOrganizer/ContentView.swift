@@ -1,4 +1,3 @@
-//
 //  ContentView.swift
 //  PatchOrganizer
 //
@@ -19,7 +18,6 @@
 // If not, see <https://www.gnu.org/licenses/>.
 //
 // (c) Copyright 2022 Thibault Ducray
-
 
 import SwiftUI
 

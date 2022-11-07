@@ -19,7 +19,6 @@
 //
 // (c) Copyright 2022 Thibault Ducray
 
-
 import SwiftUI
 
 struct UIPatch: Identifiable {
