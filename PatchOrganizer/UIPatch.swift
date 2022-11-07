@@ -1,4 +1,4 @@
-//  ContentView.swift
+//  UIPatch.swift
 //  PatchOrganizer
 //
 //  Created by Thibault DUCRAY on 03/11/2022.
