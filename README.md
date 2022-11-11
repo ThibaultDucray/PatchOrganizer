@@ -14,7 +14,7 @@ All Swift code was created to handle the C code that manipulates the PRST files.
 
 ## For Windows
 
-The equivalent C++ code was created using Qt6 community edition (Qt Creator). See qt.io for more info, or to download Qt.
+The equivalent C++ code was created using Qt6 community edition (Qt Creator). See http://qt.io for more info, or to download Qt.
 
 ## Common files
 
