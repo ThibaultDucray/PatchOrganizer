@@ -31,7 +31,7 @@ Don't care about the source code?
 4. Right clic on the application file
 5. Chose "Open" and ignore the warnings if any
 
-Also... read the [Wiki](https://github.com/ThibaultDucray/PatchOrganizer/wiki) section: **you use this software at your own risk**.
+Also... read the user guide provided in the [Wiki](https://github.com/ThibaultDucray/PatchOrganizer/wiki) section: **you use this software at your own risk**.
 
 # License
 
