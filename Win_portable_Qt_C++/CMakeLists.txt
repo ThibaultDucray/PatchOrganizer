@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
         powindow.ui
         renamedialog.h renamedialog.cpp
         renamedialog.ui
+        aboutdialog.h aboutdialog.cpp
+        aboutdialog.ui
         patchhandler.h patchhandler.cpp
         uipatch.h uipatch.cpp
         versioncontroler.h versioncontroler.cpp
@@ -32,7 +34,9 @@ set(PROJECT_SOURCES
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(PatchOrganizer
-        MANUAL_FINALIZATION
+        poressources.qrc
+        main.cpp
+        #MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 # Define target properties for Android with Qt 6 as:
