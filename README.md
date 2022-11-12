@@ -7,7 +7,7 @@ This is PatchOrganizer, a small tool that will help you organize your Ampero(c) 
 
 Don't care about the source code?
 1. Go to the [Release](https://github.com/ThibaultDucray/PatchOrganizer/releases/) section
-2. Download the application zip file
+2. Download the application zip file according to your favorite OS (Windows or MacOS)
 3. From the Finder / Explorer, unzip (uncompress) it
 4. Right clic on the application file
 5. Chose "Open" and ignore the warnings if any
