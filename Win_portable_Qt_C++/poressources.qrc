@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>img/cab_no-128.svg</file>
+        <file>img/cab_yes-128.svg</file>
+        <file>img/patchorg-icon 16.png</file>
+        <file>img/patchorg-icon 32.png</file>
+        <file>img/patchorg-icon 64.png</file>
+    </qresource>
+</RCC>
