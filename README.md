@@ -1,5 +1,5 @@
 # PatchOrganizer
-Patch organizer helper utility for Hotone Ampero(c) multieffect presets files.
+Patch organizer helper utility for Hotone Ampero(c) and Ampero One multieffect presets files.
 
 This is PatchOrganizer, a small tool that will help you organize your Ampero(c) presets files on your Mac or Windows computer.
 
