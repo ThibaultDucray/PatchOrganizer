@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		10218A1D291177D9009DFEA0 /* VersionControler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10218A1C291177D9009DFEA0 /* VersionControler.swift */; };
-		102C60D328FFD3E90088D627 /* patchorg.c in Sources */ = {isa = PBXBuildFile; fileRef = 102C60D228FFD3E90088D627 /* patchorg.c */; };
 		102C60D528FFD4400088D627 /* PatchOrg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102C60D428FFD4400088D627 /* PatchOrg.swift */; };
 		1031520D28FDA7910066B958 /* PatchOrganizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031520C28FDA7910066B958 /* PatchOrganizerApp.swift */; };
 		1031520F28FDA7910066B958 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031520E28FDA7910066B958 /* ContentView.swift */; };
@@ -19,6 +18,7 @@
 		1031522B28FDA7930066B958 /* PatchOrganizerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031522A28FDA7930066B958 /* PatchOrganizerUITestsLaunchTests.swift */; };
 		105F18B82908302000C32702 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 105F18B72908301F00C32702 /* Credits.rtf */; };
 		105F18BA290832FD00C32702 /* PatchOrganizerMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105F18B9290832FD00C32702 /* PatchOrganizerMenu.swift */; };
+		10A2E952291F98BA00E8EE1A /* patchorg.c in Sources */ = {isa = PBXBuildFile; fileRef = 10A2E951291F98BA00E8EE1A /* patchorg.c */; };
 		10ACE13F29146B8A0037479D /* UIPatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ACE13E29146B8A0037479D /* UIPatch.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,8 +42,6 @@
 /* Begin PBXFileReference section */
 		10218A1C291177D9009DFEA0 /* VersionControler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionControler.swift; sourceTree = "<group>"; };
 		102C60D028FFD3E90088D627 /* PatchOrganizer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PatchOrganizer-Bridging-Header.h"; sourceTree = "<group>"; };
-		102C60D128FFD3E90088D627 /* patchorg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = patchorg.h; sourceTree = "<group>"; };
-		102C60D228FFD3E90088D627 /* patchorg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = patchorg.c; sourceTree = "<group>"; };
 		102C60D428FFD4400088D627 /* PatchOrg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchOrg.swift; sourceTree = "<group>"; };
 		1031520928FDA7910066B958 /* PatchOrganizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PatchOrganizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1031520C28FDA7910066B958 /* PatchOrganizerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchOrganizerApp.swift; sourceTree = "<group>"; };
@@ -59,6 +57,8 @@
 		105F18B62907FFEE00C32702 /* license.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
 		105F18B72908301F00C32702 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		105F18B9290832FD00C32702 /* PatchOrganizerMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchOrganizerMenu.swift; sourceTree = "<group>"; };
+		10A2E950291F98AA00E8EE1A /* patchorg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = patchorg.h; path = ../../Common_C/patchorg.h; sourceTree = "<group>"; };
+		10A2E951291F98BA00E8EE1A /* patchorg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = patchorg.c; path = ../../Common_C/patchorg.c; sourceTree = "<group>"; };
 		10ACE13E29146B8A0037479D /* UIPatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIPatch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,14 +110,14 @@
 		1031520B28FDA7910066B958 /* PatchOrganizer */ = {
 			isa = PBXGroup;
 			children = (
+				10A2E951291F98BA00E8EE1A /* patchorg.c */,
+				10A2E950291F98AA00E8EE1A /* patchorg.h */,
 				1031520C28FDA7910066B958 /* PatchOrganizerApp.swift */,
 				10218A1C291177D9009DFEA0 /* VersionControler.swift */,
 				105F18B9290832FD00C32702 /* PatchOrganizerMenu.swift */,
 				10ACE13E29146B8A0037479D /* UIPatch.swift */,
 				1031520E28FDA7910066B958 /* ContentView.swift */,
 				102C60D428FFD4400088D627 /* PatchOrg.swift */,
-				102C60D228FFD3E90088D627 /* patchorg.c */,
-				102C60D128FFD3E90088D627 /* patchorg.h */,
 				102C60D028FFD3E90088D627 /* PatchOrganizer-Bridging-Header.h */,
 				105F18B72908301F00C32702 /* Credits.rtf */,
 				105F18B62907FFEE00C32702 /* license.txt */,
@@ -285,11 +285,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				102C60D328FFD3E90088D627 /* patchorg.c in Sources */,
 				102C60D528FFD4400088D627 /* PatchOrg.swift in Sources */,
 				1031520F28FDA7910066B958 /* ContentView.swift in Sources */,
 				1031520D28FDA7910066B958 /* PatchOrganizerApp.swift in Sources */,
 				105F18BA290832FD00C32702 /* PatchOrganizerMenu.swift in Sources */,
+				10A2E952291F98BA00E8EE1A /* patchorg.c in Sources */,
 				10ACE13F29146B8A0037479D /* UIPatch.swift in Sources */,
 				10218A1D291177D9009DFEA0 /* VersionControler.swift in Sources */,
 			);
