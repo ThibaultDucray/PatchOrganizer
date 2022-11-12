@@ -23,9 +23,9 @@ set(PROJECT_SOURCES
         renamedialog.h renamedialog.cpp
         renamedialog.ui
         patchhandler.h patchhandler.cpp
-        patchorg.c patchorg.h
         uipatch.h uipatch.cpp
         versioncontroler.h versioncontroler.cpp
+        ../Common_C/patchorg.h ../Common_C/patchorg.c
         poressources.qrc
         ${TS_FILES}
 )
