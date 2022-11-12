@@ -19,7 +19,7 @@
 #include <QString>
 
 extern "C" {
-    #include "patchorg.h"
+    #include "../Common_C/patchorg.h"
 }
 
 typedef struct pelem {
