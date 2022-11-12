@@ -17,6 +17,7 @@
 #include "./ui_powindow.h"
 #include "renamedialog.h"
 #include "uipatch.h"
+#include "aboutdialog.h"
 #include <QMessageBox>
 
 POWindow::POWindow(QWidget *parent)
@@ -213,6 +214,8 @@ void POWindow::help() {
 }
 
 void POWindow::about() {
-    QDesktopServices::openUrl(QUrl("https://github.com/ThibaultDucray/PatchOrganizer"));
+    AboutDialog *about = new AboutDialog(VERSION, this);
+    about->exec();
+    delete about;
 }
 
