@@ -24,6 +24,14 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifndef u_int8_t // WIN
+#include <stdint.h>
+
+#define u_int8_t uint8_t
+#define u_int16_t uint16_t
+#define u_int32_t uint32_t
+#endif
+
 typedef struct filedesc {
     size_t size;
     //char *name;
@@ -72,15 +80,6 @@ typedef struct presetfile {
     UserIR *userIRs[MAX_NBPATCHES]; // Can handle great number of patches. Some pointers in the array may be null
     u_int8_t tail[TAILSIZE];
 } PresetFile ;
-
-// handler for external integration such as Swift
-//typedef struct patchlist {
-//    u_int16_t nbpatches;
-//    u_int8_t num[MAX_NBPATCHES]; // Can handle great number of patches
-//    u_int8_t userIR[MAX_NBPATCHES]; // Can handle great number of patches
-//    char name[MAX_NBPATCHES][PATCH_NAME_SIZE+1]; // Can handle great number of patches
-//    PresetFile presets;
-//} PatchList;
 
 // functions declarations
 size_t fileSize(const char *filename) ;

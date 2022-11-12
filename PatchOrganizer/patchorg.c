@@ -212,6 +212,7 @@ void exchangePatchesInPreset(PresetFile* destpresets, int dest, PresetFile *sour
     u_int32_t oldPatchSize;
     u_int8_t oldPos;
     Patch *oldp;
+    int i;
     
     oldPatchSize = destpresets->patchdesc[dest].size;
     oldPos = destpresets->patches[dest]->pos;
@@ -220,11 +221,15 @@ void exchangePatchesInPreset(PresetFile* destpresets, int dest, PresetFile *sour
     destpresets->patchdesc[dest].size = sourcepresets->patchdesc[source].size;
     destpresets->patches[dest] = sourcepresets->patches[source];
     destpresets->patches[dest]->pos = oldPos;
+    destpresets->userIRs[dest] = sourcepresets->userIRs[source];
     sourcepresets->patches[source] = oldp; // this allows the memory to be freed when freeing sourcepresets
     
-    // recalc offset of next patch
+    // recalc offset of next patches
     if (dest < destpresets->header->nbpatches - 1) {
         destpresets->patchdesc[dest + 1].offset = destpresets->patchdesc[dest + 1].offset - oldPatchSize + destpresets->patchdesc[dest].size;
+    }
+    for (i = dest + 1; i < destpresets->header->nbpatches - 1; i++) {
+        destpresets->patchdesc[i + 1].offset = destpresets->patchdesc[i].offset + destpresets->patchdesc[i].size;
     }
     // recalc file size
     destpresets->header->size = destpresets->header->size - oldPatchSize + destpresets->patchdesc[dest].size;
