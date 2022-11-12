@@ -7,8 +7,16 @@ This is PatchOrganizer, a small tool that will help you organize your Ampero(c) 
 
 The source code:
 
+## For MacOS
+
 All Swift code was created to handle the C code that manipulates the PRST files.
 <br/>You need XCode on your MacOS to develop and compile the app.
+
+## For Windows
+
+The equivalent C++ code was created using Qt6 community edition (Qt Creator). See http://qt.io for more info, or to download Qt.
+
+## Common files
 
 Two C files are needed:
 <br/>patchorg.h -> header file
@@ -19,16 +27,16 @@ Two C files are needed:
 Don't care about the source code?
 1. Go to the [Release](https://github.com/ThibaultDucray/PatchOrganizer/releases/) section
 2. Download the application zip file
-3. From the Finder, unzip (uncompress) it
+3. From the Finder / Explorer, unzip (uncompress) it
 4. Right clic on the application file
 5. Chose "Open" and ignore the warnings if any
 
-Also... read the [Wiki](https://github.com/ThibaultDucray/PatchOrganizer/wiki) section: **you use this software at your own risk**.
+Also... read the user guide provided in the [Wiki](https://github.com/ThibaultDucray/PatchOrganizer/wiki) section: **you use this software at your own risk**.
 
 # License
 
 GPL - GNU GENERAL PUBLIC LICENSE.
-See https://www.gnu.org/licenses/gpl.txt
+<br/>See https://www.gnu.org/licenses/gpl.txt and https://www.qt.io/licensing/
 
 # Copyright
 
