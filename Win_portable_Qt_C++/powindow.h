@@ -23,7 +23,7 @@
 #include <QListWidgetItem>
 #include "versioncontroler.h"
 
-#define VERSION "1.0.3"
+#define VERSION "1.0.4"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class POWindow; }
